@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         } else{
             goToLoginActivity();
         }
+        //inicia o monitoramento quando abre o app
+        MyBeaconFacade.startMyBeaconsManagerOperation();
     }
 
     @Override
