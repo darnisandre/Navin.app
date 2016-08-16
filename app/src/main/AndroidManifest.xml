@@ -41,8 +41,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainActivity" />
         </activity>
-        <activity android:name=".view.AboutActivity"
-            android:parentActivityName="guilherme.krzisch.com.mybeaconclient.view.MainActivity" >
+        <activity
+            android:name=".view.AboutActivity"
+            android:parentActivityName=".view.MainActivity" >
         </activity>
     </application>
 
