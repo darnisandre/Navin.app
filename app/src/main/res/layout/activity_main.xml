@@ -9,57 +9,103 @@
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/helloTextView"
-        android:text="@string/hello"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/usernameTextView"
-        tools:text="Guiherme"
-        android:layout_toRightOf="@+id/helloTextView"
-        android:layout_toEndOf="@+id/helloTextView"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
     <ImageButton
         android:id="@+id/syncButton"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:layout_below="@id/usernameTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="83dp"
         android:onClick="sync"
         android:contentDescription="@string/synchronize"
         android:scaleType="centerInside"
-        android:src="@drawable/bt_synchronize"/>
+        android:src="@drawable/bt_synchronize"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/startOperationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/syncButton"
-        android:layout_marginTop="5dp"
         android:onClick="startOperation"
-        android:text="@string/startOperation"/>
+        android:text="@string/startOperation"
+        android:layout_below="@+id/syncButton"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/stopOperationButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/startOperationButton"
-        android:layout_marginTop="5dp"
         android:onClick="stopOperation"
-        android:text="@string/stopOperation"/>
+        android:text="@string/stopOperation"
+        android:layout_below="@+id/startOperationButton"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/editTextGateDescription"
         android:layout_below="@+id/stopOperationButton"
-        android:layout_marginTop="5dp"/>
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/lblLatitudeValue"
+        android:layout_below="@+id/editTextGateDescription"
+        android:layout_alignEnd="@+id/editTextGateDescription"
+        android:layout_alignStart="@+id/syncButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/lblLongitudeValue"
+        android:layout_below="@+id/lblLatitudeValue"
+        android:layout_alignEnd="@+id/editTextGateDescription"
+        android:layout_alignStart="@+id/lblLatitudeValue" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Latitude:"
+        android:id="@+id/lblLatitude"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editTextGateDescription"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Longitude:"
+        android:id="@+id/lblLongitude"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lblLatitude"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Bem-vindo ao sistema de navegação indoor Nav.In!"
+        android:id="@+id/txtTitle"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/startOperationButton"
+        android:lines="3"
+        android:layout_alignParentEnd="false"
+        android:layout_centerHorizontal="true"
+        android:autoText="false" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Categorias"
+        android:onClick="goToCategories"
+        android:id="@+id/btnCategorias"
+        android:layout_below="@+id/lblLongitudeValue"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
 
 </RelativeLayout>

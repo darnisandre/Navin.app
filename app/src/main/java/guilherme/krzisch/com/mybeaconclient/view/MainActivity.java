@@ -1,6 +1,10 @@
 package guilherme.krzisch.com.mybeaconclient.view;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +20,13 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
-import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconServerHandlerInterface;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.GateModule.GateManager;
-import guilherme.krzisch.com.mybeaconclient.view.login.LoginActivity;
 
 
 public class MainActivity extends AppCompatActivity {
-    @InjectView(R.id.usernameTextView) TextView usernameTextView;
+    @InjectView(R.id.lblLatitudeValue) TextView txtLatitude;
+    @InjectView(R.id.lblLongitudeValue) TextView txtLongitude;
+    @InjectView(R.id.txtTitle) TextView txtTitle;
     @InjectView(R.id.mainActivityView) View mainActivityView;
     @InjectView(R.id.editTextGateDescription) EditText editTextGateDescription;
 
@@ -31,16 +35,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-        if(MyBeaconFacade.isUserLoggedIn()){
-            usernameTextView.setText(MyBeaconFacade.getCurrentUsername());
-            if(!MyBeaconFacade.verifyBluetooth()) {
-                mainActivityView.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
-            }
-        } else{
-            goToLoginActivity();
-        }
+
+        //liga o bluetooth automaticamente
+        this.enableBT(this.mainActivityView);
+
+        //mostra na tela a posição do GPS
+        txtLatitude.setText(this.getLatitude(this.mainActivityView));
+        txtLongitude.setText(this.getLongitude(this.mainActivityView));
+
         //inicia o monitoramento quando abre o app
-        MyBeaconFacade.startMyBeaconsManagerOperation();
+        //MyBeaconFacade.startMyBeaconsManagerOperation();
+    }
+
+    public String getLatitude(View view){
+        //pega a posição atual do GPS
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double latitude = location.getLatitude();
+        return Double.toString(latitude);
+    }
+
+    public String getLongitude(View view){
+        //pega a posição atual do GPS
+        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double longitude = location.getLongitude();
+        return Double.toString(longitude);
+    }
+
+    public void enableBT(View view){
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!mBluetoothAdapter.isEnabled()){
+            Intent intentBtEnabled = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            // The REQUEST_ENABLE_BT constant passed to startActivityForResult() is a locally defined integer (which must be greater than 0), that the system passes back to you in your onActivityResult()
+            // implementation as the requestCode parameter.
+            int REQUEST_ENABLE_BT = 1;
+            startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
+        }
     }
 
     @Override
@@ -53,36 +84,28 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_settings:
+                goToSettingsActivity();
                 return true;
-            case R.id.action_logout:
-                logout();
+            case R.id.action_about:
+                goToAboutActivity();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void logout() {
-        MyBeaconFacade.logout(new MyBeaconServerHandlerInterface() {
-            @Override
-            public void handle(final boolean success) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (success) {
-                            goToLoginActivity();
-                        } else {
-                            Toast.makeText(getBaseContext(), "Could not logout!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
-            }
-        });
+    private void goToSettingsActivity(){
+        Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+        startActivity(intent);
     }
 
-    private void goToLoginActivity(){
-        Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+    private void goToAboutActivity(){
+        Intent intent = new Intent(getBaseContext(), AboutActivity.class);
         startActivity(intent);
-        finish();
+    }
+
+    public void goToCategories(View view){
+        //Intent intent = new Intent(getBaseContext(), TabActivity.class);
+        //startActivity(intent);
     }
 
     public void sync(View view) {

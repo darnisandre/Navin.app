@@ -4,7 +4,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    // Bluetooth
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    //GPS
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     // Just for debug
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -27,6 +32,17 @@
             android:name=".view.login.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".view.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainActivity" />
+        </activity>
+        <activity android:name=".view.AboutActivity"
+            android:parentActivityName="guilherme.krzisch.com.mybeaconclient.view.MainActivity" >
         </activity>
     </application>
 
