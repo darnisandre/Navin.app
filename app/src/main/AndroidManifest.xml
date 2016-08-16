@@ -24,8 +24,6 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
@@ -36,14 +34,27 @@
         <activity
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.MainActivity" >
+            android:parentActivityName=".view.MainTabActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
         <activity
             android:name=".view.AboutActivity"
-            android:parentActivityName=".view.MainActivity" >
+            android:parentActivityName=".view.MainTabActivity" >
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+        </activity>
+        <activity
+            android:name=".view.MainTabActivity"
+            android:label="@string/title_activity_main_tab"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
