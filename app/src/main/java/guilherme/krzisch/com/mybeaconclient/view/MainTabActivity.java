@@ -1,5 +1,6 @@
 package guilherme.krzisch.com.mybeaconclient.view;
 
+import android.app.ActionBar;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,9 @@ import android.widget.TextView;
 
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
+import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
+import guilherme.krzisch.com.mybeaconclient.view.util.ZoomOutPageTransformer;
 
 public class MainTabActivity extends AppCompatActivity {
 
@@ -36,6 +40,7 @@ public class MainTabActivity extends AppCompatActivity {
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
+    private SlidingTabLayout mSlidingTabLayout;
     private SectionsPagerAdapter mSectionsPagerAdapter;
     @InjectView(R.id.mainTabActivityView) View mainTabActivityView;
 
@@ -51,6 +56,12 @@ public class MainTabActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //mostra o icone na barra
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(R.mipmap.ic_launcher);
+
+        //actionBar.setNavigationMode(android.support.v7.app.ActionBar.NAVIGATION_MODE_TABS);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -58,6 +69,13 @@ public class MainTabActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        //habilita as abas
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setViewPager(mViewPager);
+
+        //muda efeito da transição de abas
+        mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
         //liga o bluetooth automaticamente
         this.enableBT(this.mainTabActivityView);
@@ -168,13 +186,12 @@ public class MainTabActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "SECTION 1";
+                    return "Home";
                 case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
+                    return "Free Navigation";
+                default:
+                    return "Route";
             }
-            return null;
         }
     }
 
