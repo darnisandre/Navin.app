@@ -2,11 +2,13 @@ package guilherme.krzisch.com.mybeaconclient.view;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -15,6 +17,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -43,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         txtLatitude.setText(this.getLatitude(this.mainActivityView));
         txtLongitude.setText(this.getLongitude(this.mainActivityView));
 
+        //TextToSpeech tts = new TextToSpeech(this, this);
+        //Locale localeBR = new Locale("pt","br");
+        //tts.setLanguage(localeBR);
+        //tts.speak("Testando leitor de tela.", TextToSpeech.QUEUE_ADD, null);
         //inicia o monitoramento quando abre o app
         //MyBeaconFacade.startMyBeaconsManagerOperation();
     }

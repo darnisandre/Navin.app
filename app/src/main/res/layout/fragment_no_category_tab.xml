@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Bem-vindo ao sistema de navegação indoor Nav.In"
+        android:text="Para navegar livremente pressione no centro da tela"
         android:id="@+id/txtTitle"
         android:layout_below="@+id/section_label"
         android:layout_centerHorizontal="true"
