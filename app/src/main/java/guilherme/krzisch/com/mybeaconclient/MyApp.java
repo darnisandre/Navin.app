@@ -9,8 +9,8 @@ public class MyApp extends Application {
     private static final String BAASBOX_URL = "put_here_server_url";
     private static final int PORT = 80;
     private static final String APP_CODE = "put_here_app_code";
-    private static final String BEACON_RANGE_IDENTIFIER = "put_here_beacon_range_identifier";
-    private static final String UUID = "1j2h3456hg1j2h3456hg1j2h3456hg98";
+    private static final String BEACON_RANGE_IDENTIFIER = "b9407f30f5f8466eaff925556b57fe6d";
+    private static final String UUID = "b9407f30f5f8466eaff925556b57fe6d";
 
     // App context
     private static Context context;

@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
 import guilherme.krzisch.com.mybeaconclient.view.util.ZoomOutPageTransformer;
@@ -77,9 +78,6 @@ public class MainTabActivity extends AppCompatActivity {
         //muda efeito da transição de abas
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
-        //liga o bluetooth automaticamente
-        this.enableBT(this.mainTabActivityView);
-
         //mostra na tela a posição do GPS
         final String latitude = (this.getLatitude(this.mainTabActivityView));
         final String longitude = (this.getLongitude(this.mainTabActivityView));
@@ -94,36 +92,34 @@ public class MainTabActivity extends AppCompatActivity {
         });
 
         //inicia o monitoramento quando abre o app
-        //MyBeaconFacade.startMyBeaconsManagerOperation();
+        MyBeaconFacade.startMyBeaconsManagerOperation();
     }
 
     public String getLatitude(View view){
         //pega a posição atual do GPS
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double latitude = location.getLatitude();
-        return Double.toString(latitude);
+        if(location != null) {
+            double latitude = location.getLatitude();
+            return Double.toString(latitude);
+        }
+        else{
+            return "0";
+        }
     }
 
     public String getLongitude(View view){
         //pega a posição atual do GPS
         LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location != null){
         double longitude = location.getLongitude();
         return Double.toString(longitude);
-    }
-
-    public void enableBT(View view){
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!mBluetoothAdapter.isEnabled()){
-            Intent intentBtEnabled = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            // The REQUEST_ENABLE_BT constant passed to startActivityForResult() is a locally defined integer (which must be greater than 0), that the system passes back to you in your onActivityResult()
-            // implementation as the requestCode parameter.
-            int REQUEST_ENABLE_BT = 1;
-            startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
+        }
+        else{
+            return "0";
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -138,26 +134,26 @@ public class MainTabActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
-            case R.id.action_settings:
-                goToSettingsActivity();
-                return true;
             case R.id.action_about:
                 goToAboutActivity();
+                return true;
+            case R.id.action_refresh:
+                refresh();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void goToSettingsActivity(){
-        Intent intent = new Intent(getBaseContext(), SettingsActivity.class);
+    private void refresh(){
+        Intent intent = getIntent();
         startActivity(intent);
+        finish();
     }
 
     private void goToAboutActivity(){
         Intent intent = new Intent(getBaseContext(), AboutActivity.class);
         startActivity(intent);
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
