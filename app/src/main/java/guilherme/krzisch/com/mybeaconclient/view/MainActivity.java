@@ -14,6 +14,7 @@ import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +26,11 @@ import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.GateModule.GateManager;
+import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.txtTitle) TextView txtTitle;
     @InjectView(R.id.mainActivityView) View mainActivityView;
     @InjectView(R.id.editTextGateDescription) EditText editTextGateDescription;
+    TTSManager ttsManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         //inicia o monitoramento quando abre o app
         //MyBeaconFacade.startMyBeaconsManagerOperation();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,10 +27,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import butterknife.InjectView;
+import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
+import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 import guilherme.krzisch.com.mybeaconclient.view.util.ZoomOutPageTransformer;
 
 public class MainTabActivity extends AppCompatActivity {
@@ -92,7 +96,7 @@ public class MainTabActivity extends AppCompatActivity {
         });
 
         //inicia o monitoramento quando abre o app
-        MyBeaconFacade.startMyBeaconsManagerOperation();
+        //MyBeaconFacade.startMyBeaconsManagerOperation();
     }
 
     public String getLatitude(View view){
@@ -175,7 +179,7 @@ public class MainTabActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 6;
+            return 4;
         }
 
         @Override
@@ -216,6 +220,33 @@ public class MainTabActivity extends AppCompatActivity {
         public PlaceholderFragment() {
         }
 
+        private void welcomeMessage(){
+
+            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
+                String myText1 = "Bem-vindo";
+                MyApp.getAppTTS().initQueue(myText1);
+                //adding it to queue
+                //MyApp.getAppTTS().addQueue(myText2);
+            }else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
+                String myText1 = "Navegar sem rota";
+                MyApp.getAppTTS().initQueue(myText1);
+                //adding it to queue
+                //MyApp.getAppTTS().addQueue(myText2);
+            }else{
+                String myText1 = "Esta é a rota " + getArguments().getInt(ARG_SECTION_NUMBER);
+                MyApp.getAppTTS().initQueue(myText1);
+                //adding it to queue
+                //MyApp.getAppTTS().addQueue(myText2);
+            }
+
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+            welcomeMessage();
+        }
+
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -223,7 +254,6 @@ public class MainTabActivity extends AppCompatActivity {
                 View rootView = inflater.inflate(R.layout.fragment_main_tab, container, false);
                 TextView textView = (TextView) rootView.findViewById(R.id.section_label);
                 textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-
                 return rootView;
             }else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
                 View rootView = inflater.inflate(R.layout.fragment_no_category_tab, container, false);

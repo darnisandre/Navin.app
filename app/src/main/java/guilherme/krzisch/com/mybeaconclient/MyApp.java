@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
+import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 
 public class MyApp extends Application {
     private static final String BAASBOX_URL = "put_here_server_url";
@@ -14,9 +15,13 @@ public class MyApp extends Application {
 
     // App context
     private static Context context;
+    private static TTSManager ttsManager;
 
     public static Context getAppContext() {
         return MyApp.context;
+    }
+    public static TTSManager getAppTTS() {
+        return MyApp.ttsManager;
     }
 
     @Override
@@ -24,5 +29,7 @@ public class MyApp extends Application {
         super.onCreate();
         MyApp.context = getApplicationContext();
         MyBeaconFacade.initFramework(this, false, BAASBOX_URL, PORT, APP_CODE, BEACON_RANGE_IDENTIFIER, UUID);
+        ttsManager = new TTSManager();
+        ttsManager.init(this);
     }
 }
