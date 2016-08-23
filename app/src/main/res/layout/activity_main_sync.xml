@@ -13,30 +13,80 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bluetooth"
-        android:id="@+id/chkBT"
+        android:text="Bússola"
+        android:id="@+id/chkCompass"
         android:checked="false"
-        android:layout_above="@+id/chkGPS"
-        android:layout_alignParentStart="true"
-        android:enabled="false" />
+        android:enabled="false"
+        android:layout_below="@+id/textViewTileOp"
+        android:layout_alignParentStart="true" />
 
-    <CheckBox
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Requisitos obrigatórios"
+        android:id="@+id/textViewTitleOb"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth"
+        android:id="@+id/switchBT"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:checked="false" />
+
+    <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="GPS"
-        android:id="@+id/chkGPS"
-        android:checked="false"
-        android:layout_centerVertical="true"
+        android:id="@+id/switchGPS"
+        android:layout_below="@+id/switchBT"
         android:layout_alignParentStart="true"
-        android:enabled="false" />
+        android:layout_alignEnd="@+id/switchBT"
+        android:checked="false" />
 
-    <CheckBox
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bússola"
-        android:id="@+id/chkCompass"
-        android:layout_below="@+id/chkGPS"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Requisitos opcionais"
+        android:id="@+id/textViewTileOp"
+        android:layout_below="@+id/switchGPS"
         android:layout_alignParentStart="true"
-        android:checked="false"
-        android:enabled="false" />
+        android:layout_marginTop="28dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Aplicação"
+        android:id="@+id/buttonInit"
+        android:enabled="false"
+        android:layout_below="@+id/textViewLocal"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="false"
+        android:max="100"
+        android:visibility="invisible" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Buscando localização.."
+        android:id="@+id/textViewLocal"
+        android:layout_below="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:minLines="3" />
 </RelativeLayout>

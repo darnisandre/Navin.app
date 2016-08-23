@@ -26,10 +26,10 @@ public class MyApp extends Application {
 
     @Override
     public void onCreate() {
+        ttsManager = new TTSManager();
+        ttsManager.init(this);
         super.onCreate();
         MyApp.context = getApplicationContext();
         MyBeaconFacade.initFramework(this, false, BAASBOX_URL, PORT, APP_CODE, BEACON_RANGE_IDENTIFIER, UUID);
-        ttsManager = new TTSManager();
-        ttsManager.init(this);
     }
 }

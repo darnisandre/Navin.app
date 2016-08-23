@@ -7,19 +7,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 
 
@@ -27,9 +36,14 @@ import guilherme.krzisch.com.mybeaconclient.R;
 public class MainSyncActivity extends AppCompatActivity {
 
     @InjectView(R.id.mainSyncActivityView) View mainSyncActivityView;
-    @InjectView(R.id.chkBT) CheckBox chkBT;
-    @InjectView(R.id.chkGPS) CheckBox chkGPS;
+    @InjectView(R.id.switchBT) Switch switchBT;
+    @InjectView(R.id.switchGPS) Switch switchGPS;
     @InjectView(R.id.chkCompass) CheckBox chkCompass;
+    @InjectView(R.id.buttonInit) Button buttonInit;
+    @InjectView(R.id.progressBar) ProgressBar progressBar;
+    @InjectView(R.id.textViewLocal) TextView textViewLocal;
+    LocationManager lm = null;
+    Location location = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,27 +51,58 @@ public class MainSyncActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_sync);
         ButterKnife.inject(this);
 
-        //limpa os checkboxes
-        chkBT.setChecked(false);
-        chkGPS.setChecked(false);
-        chkCompass.setChecked(false);
-        chkCompass.setText("Bússola (Algumas funcionalidades ficaram limitadas sem este recurso)");
+        //onclick do botão
+        buttonInit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
-        //pede para ligar BT
-        this.enableBT(this.mainSyncActivityView);
+        //onchange do switch do bluetooth
+        switchBT.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    //pede para ligar BT
+                    enableBT(mainSyncActivityView);
 
-        //pede para ligar GPS
-        this.enableGPS(this.mainSyncActivityView);
+                }
+            }
+        });
+        if(switchBT.isChecked()){
+            switchBT.setEnabled(false);
+        }else{
+            switchBT.setEnabled(true);
+        }
+
+        //onchange do switch do gps
+        switchGPS.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    //pede para ligar BT
+                    enableGPS(mainSyncActivityView);
+                    switchGPS.setEnabled(false);
+                }
+            }
+        });
+        if(switchGPS.isChecked()){
+            switchGPS.setEnabled(false);
+        }else{
+            switchGPS.setEnabled(true);
+        }
 
         //verifica se tem bússola
         if(this.compassVerify(this.mainSyncActivityView)){
             chkCompass.setChecked(true);
-            chkCompass.setText("Bússola");
+        }else{
+            chkCompass.setChecked(false);
         }
 
-        //verifica se tudo está ligado
-        this.verifyOK();
-
+        //onlongclick da tela
         this.mainSyncActivityView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -101,26 +146,67 @@ public class MainSyncActivity extends AppCompatActivity {
     }
 
     private void refresh(){
-        //limpa os checkboxes
-        chkBT.setChecked(false);
-        chkGPS.setChecked(false);
 
-        //pede para ligar BT
-        this.enableBT(this.mainSyncActivityView);
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (!mBluetoothAdapter.isEnabled()){
+            switchBT.setChecked(false);
+            switchBT.setEnabled(true);
+        }else{
+            switchBT.setChecked(true);
+            switchBT.setEnabled(false);
+        }
 
-        //pede para ligar GPS
-        this.enableGPS(this.mainSyncActivityView);
+        //inicia o location manager
+        lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        boolean GPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        //verifica se tudo está ligado
+        if(!GPSEnabled){
+            switchGPS.setChecked(false);
+            switchGPS.setEnabled(true);
+        }else{
+            if(location == null){
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            }
+            switchGPS.setChecked(true);
+            switchGPS.setEnabled(false);
+        }
+
         this.verifyOK();
     }
 
     public void verifyOK(){
         //verifica se tudo está ligado
-        if(chkBT.isChecked() && chkGPS.isChecked()){
-            Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
-            startActivity(intent);
-            finish();
+        if(switchBT.isChecked() && switchGPS.isChecked()){
+            Log.i("GPS", String.valueOf(getLatitude(this.mainSyncActivityView)));
+            if(getLatitude(this.mainSyncActivityView) == 0) {
+                progressBar.setVisibility(View.VISIBLE);
+                textViewLocal.setVisibility(View.VISIBLE);
+                textViewLocal.setText("Buscando localização..");
+                String myText1 = String.valueOf(textViewLocal.getText());
+                MyApp.getAppTTS().initQueue(myText1);
+            }
+            else if(getLatitude(this.mainSyncActivityView) != 0){
+
+                //TODO HERE
+                //depois que tem a localização do GPS, buscar no banco de dados e sincronizar os objetos
+                //mudar o texto do textViewLocal para o nome do local que buscou no banco
+
+                progressBar.setVisibility(View.INVISIBLE);
+                textViewLocal.setText("Localização obtida!");
+                textViewLocal.setVisibility(View.VISIBLE);
+
+                //voz informando que encontrou a localização
+                String myText = String.valueOf(textViewLocal.getText());
+                MyApp.getAppTTS().initQueue(myText);
+
+                //habilita o botão para ir pro aplicativo quando tudo estiver ligado e sincronizado
+                buttonInit.setEnabled(true);
+            }
+        }else{
+            progressBar.setVisibility(View.INVISIBLE);
+            textViewLocal.setVisibility(View.INVISIBLE);
+            buttonInit.setEnabled(false);
         }
     }
 
@@ -134,10 +220,10 @@ public class MainSyncActivity extends AppCompatActivity {
             startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
         }
         else{
-            chkBT.setChecked(true);
-
+            switchBT.setChecked(true);
+            switchBT.setEnabled(false);
             //verifica se tudo está ligado
-            this.verifyOK();
+            //this.verifyOK();
         }
     }
 
@@ -150,10 +236,10 @@ public class MainSyncActivity extends AppCompatActivity {
             this.showGPSDisabledAlertToUser(REQUEST_ENABLE_GPS);
             //startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_ENABLE_GPS);
         }else{
-            chkGPS.setChecked(true);
-
+            switchGPS.setChecked(true);
+            switchGPS.setEnabled(false);
             //verifica se tudo está ligado
-            this.verifyOK();
+            //this.verifyOK();
         }
     }
 
@@ -179,21 +265,80 @@ public class MainSyncActivity extends AppCompatActivity {
         alert.show();
     }
 
+    // Define a listener that responds to location updates
+    LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged(Location locat) {
+            // Called when a new location is found by the network location provider.
+            Log.i("GPS", "found");
+            location = locat;
+            lm.removeUpdates(locationListener);
+
+            verifyOK();
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+        public void onProviderEnabled(String provider) {}
+
+        public void onProviderDisabled(String provider) {}
+    };
+
+
+    public double getLatitude(View view){
+        //pega a posição atual do GPS
+        if(location != null) {
+            double latitude = location.getLatitude();
+            lm.removeUpdates(locationListener);
+            return latitude;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public double getLongitude(View view){
+        //pega a posição atual do GPS
+        if(location != null){
+            double longitude = location.getLongitude();
+            lm.removeUpdates(locationListener);
+            return longitude;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("RESUME", "RESUME");
+        refresh();
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) { //bluetooth
             if(resultCode == Activity.RESULT_OK){
-                chkBT.setChecked(true);
+                switchBT.setChecked(true);
+                switchBT.setEnabled(false);
                 //verifica se tudo está ligado
-                this.verifyOK();
+                //this.verifyOK();
+            }else{
+                switchBT.setChecked(false);
+                switchBT.setEnabled(true);
             }
         }
         if (requestCode == 2) { //GPS
             if(resultCode == Activity.RESULT_OK){
-                chkGPS.setChecked(true);
+                switchGPS.setChecked(true);
+                switchGPS.setEnabled(false);
                 //verifica se tudo está ligado
-                this.verifyOK();
+                //this.verifyOK();
+            }else{
+                switchGPS.setChecked(false);
+                switchGPS.setEnabled(true);
             }
         }
     }//onActivityResult

@@ -226,17 +226,20 @@ public class MainTabActivity extends AppCompatActivity {
                 String myText1 = "Bem-vindo";
                 MyApp.getAppTTS().initQueue(myText1);
                 //adding it to queue
-                //MyApp.getAppTTS().addQueue(myText2);
+                String myText2 = "Para ouvir as opções disponíveis deslize a tela da direita para a esquerda.";
+                MyApp.getAppTTS().addQueue(myText2);
             }else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
                 String myText1 = "Navegar sem rota";
                 MyApp.getAppTTS().initQueue(myText1);
                 //adding it to queue
-                //MyApp.getAppTTS().addQueue(myText2);
+                String myText2 = "Para selecionar essa opção, pressione no centro da tela.";
+                MyApp.getAppTTS().addQueue(myText2);
             }else{
                 String myText1 = "Esta é a rota " + getArguments().getInt(ARG_SECTION_NUMBER);
                 MyApp.getAppTTS().initQueue(myText1);
                 //adding it to queue
-                //MyApp.getAppTTS().addQueue(myText2);
+                String myText2 = "Para selecionar essa opção, pressione no centro da tela.";
+                MyApp.getAppTTS().addQueue(myText2);
             }
 
         }
