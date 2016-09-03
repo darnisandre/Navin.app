@@ -3,6 +3,10 @@ package guilherme.krzisch.com.mybeaconclient;
 import android.app.Application;
 import android.content.Context;
 
+import com.estimote.sdk.Beacon;
+
+import java.util.List;
+
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 
@@ -23,6 +27,8 @@ public class MyApp extends Application {
     public static TTSManager getAppTTS() {
         return MyApp.ttsManager;
     }
+
+
 
     @Override
     public void onCreate() {
