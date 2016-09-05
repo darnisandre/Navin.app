@@ -10,11 +10,10 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.SystemClock;
+import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +29,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
-
+import navin.dto.BeaconMappingDTO;
+import navin.dto.LocationDTO;
+import navin.dto.RouteDTO;
 
 
 public class MainSyncActivity extends AppCompatActivity {
@@ -176,6 +177,13 @@ public class MainSyncActivity extends AppCompatActivity {
     }
 
     public void verifyOK(){
+
+        //TODO achar um modo de poder utilizar chamada REST na main sem usar isso
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         //verifica se tudo está ligado
         if(switchBT.isChecked() && switchGPS.isChecked()){
             Log.i("GPS", String.valueOf(getLatitude(this.mainSyncActivityView)));
@@ -191,9 +199,13 @@ public class MainSyncActivity extends AppCompatActivity {
                 //TODO HERE
                 //depois que tem a localização do GPS, buscar no banco de dados e sincronizar os objetos
                 //mudar o texto do textViewLocal para o nome do local que buscou no banco
+                RouteDTO r = MyApp.getInternalCache().getRoutes(1).get(0);
+                LocationDTO l = MyApp.getInternalCache().getLocations(31.99938,55.889).get(0);
+                BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
+
 
                 progressBar.setVisibility(View.INVISIBLE);
-                textViewLocal.setText("Localização obtida!");
+                textViewLocal.setText(r.getDescription() + "\n" + l.getDescription() + "\n" + mapping.getLocation().getDescription());
                 textViewLocal.setVisibility(View.VISIBLE);
 
                 //voz informando que encontrou a localização
