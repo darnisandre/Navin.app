@@ -18,6 +18,10 @@ import navin.dto.RouteDTO;
  */
 public class InternalCache {
     private static final String LOCATION_KEY = "locations";
+    private static final String ROUTES_KEY = "routes_%s";
+    private static final String ROUTE_KEY = "route_%s";
+    private static final String BEACON_MAPPING_KEY = "beacon_mapping_%s";
+
     private final RestClient restClient;
     private final Context context;
 
@@ -27,15 +31,33 @@ public class InternalCache {
     }
 
     public List<RouteDTO> getRoutes(final int locationId) {
-        return restClient.getRoutes(locationId);
+        String routesKey = String.format(ROUTES_KEY,locationId);
+        List<RouteDTO> routes = (List<RouteDTO>) InternalStorage.readObject(context,routesKey);
+        if(routes == null){
+            routes = restClient.getRoutes(locationId);
+            InternalStorage.writeObject(context,routesKey,routes);
+        }
+        return routes;
     }
 
     public RouteDTO getRoute(final int id) {
-        return restClient.getRoute(id);
+        String routeKey = String.format(ROUTE_KEY,id);
+        RouteDTO route = (RouteDTO) InternalStorage.readObject(context,routeKey);
+        if(route == null){
+            route = restClient.getRoute(id);
+            InternalStorage.writeObject(context,routeKey,route);
+        }
+        return route;
     }
 
     public BeaconMappingDTO getBeaconMapping(final int locationId) {
-        return restClient.getBeaconMapping(locationId);
+        String beaconMappingKey = String.format(BEACON_MAPPING_KEY,locationId);
+        BeaconMappingDTO mapping = (BeaconMappingDTO) InternalStorage.readObject(context,beaconMappingKey);
+        if(mapping==null){
+            mapping = restClient.getBeaconMapping(locationId);
+            InternalStorage.writeObject(context,beaconMappingKey,mapping);
+        }
+        return mapping;
     }
 
     public List<LocationDTO> getLocations(final double lat, double longitude) {
@@ -44,12 +66,23 @@ public class InternalCache {
         for(LocationDTO l : locations){
             LocationDTO cacheLocation = cacheLocations.get(l.getId());
             if(cacheLocation!=null && l.getLastUpdated().after(cacheLocation.getLastUpdated())){
-                //TODO remove cache
+                cleanCacheLocation(l.getId());
             }
             cacheLocations.put(l.getId(),l);
         }
         storeCacheLocations(cacheLocations);
         return locations;
+    }
+
+    private void cleanCacheLocation(Long locationId) {
+        InternalStorage.deleteObject(context,String.format(BEACON_MAPPING_KEY,locationId));
+        List<RouteDTO> routes = (List<RouteDTO>) InternalStorage.readObject(context,String.format(ROUTES_KEY,locationId));
+        if(routes != null){
+            for(RouteDTO route : routes){
+                InternalStorage.deleteObject(context, String.format(ROUTE_KEY,route.getId()));
+            }
+        }
+        InternalStorage.deleteObject(context,String.format(ROUTES_KEY,locationId));
     }
 
     private void storeCacheLocations(HashMap<Long, LocationDTO> cacheLocations) {

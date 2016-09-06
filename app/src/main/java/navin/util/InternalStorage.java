@@ -23,7 +23,10 @@ public final class InternalStorage{
 
        }
    }
- 
+   public static void deleteObject(Context context, String key)  {
+       context.deleteFile(key);
+   }
+
    public static Object readObject(Context context, String key) {
       try {
          FileInputStream fis = context.openFileInput(key);
