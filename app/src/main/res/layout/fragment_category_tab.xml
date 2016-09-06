@@ -7,7 +7,10 @@
     tools:context="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity$PlaceholderFragment">
 
     <TextView android:id="@+id/section_label" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -15,8 +18,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Título da categoria"
         android:id="@+id/txtTitle"
-        android:layout_below="@+id/section_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

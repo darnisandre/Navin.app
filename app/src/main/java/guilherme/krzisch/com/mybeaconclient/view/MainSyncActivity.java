@@ -25,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
@@ -200,12 +202,16 @@ public class MainSyncActivity extends AppCompatActivity {
                 //depois que tem a localização do GPS, buscar no banco de dados e sincronizar os objetos
                 //mudar o texto do textViewLocal para o nome do local que buscou no banco
                 RouteDTO r = MyApp.getInternalCache().getRoutes(1).get(0);
-                LocationDTO l = MyApp.getInternalCache().getLocations(31.99938,55.889).get(0);
+                LocationDTO l = MyApp.getInternalCache().getLocations(0,0).get(0);
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
+
+                //acho que vamos ter que fazer isso pra toda estrutura
+                MyApp.setRoutes(MyApp.getInternalCache().getRoutes(1));
+
 
 
                 progressBar.setVisibility(View.INVISIBLE);
-                textViewLocal.setText(r.getDescription() + "\n" + l.getDescription() + "\n" + mapping.getLocation().getDescription());
+                textViewLocal.setText(mapping.getLocation().getDescription());
                 textViewLocal.setVisibility(View.VISIBLE);
 
                 //voz informando que encontrou a localização
