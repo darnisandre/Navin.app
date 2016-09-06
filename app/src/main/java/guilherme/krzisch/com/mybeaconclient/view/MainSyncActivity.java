@@ -199,8 +199,8 @@ public class MainSyncActivity extends AppCompatActivity {
                 //TODO HERE
                 //depois que tem a localização do GPS, buscar no banco de dados e sincronizar os objetos
                 //mudar o texto do textViewLocal para o nome do local que buscou no banco
-                RouteDTO r = MyApp.getInternalCache().getRoutes(1).get(0);
                 LocationDTO l = MyApp.getInternalCache().getLocations(31.99938,55.889).get(0);
+                RouteDTO r = MyApp.getInternalCache().getRoutes(1).get(0);
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
 
 
