@@ -7,6 +7,8 @@ import java.util.List;
 
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
+import navin.dto.BeaconDTO;
+import navin.dto.BeaconMappingDTO;
 import navin.dto.RouteDTO;
 import navin.util.InternalCache;
 import navin.util.RestClient;
@@ -24,6 +26,7 @@ public class MyApp extends Application {
     private static TTSManager ttsManager;
     private static InternalCache internalCache;
     private static List<RouteDTO> rLst;
+    private static BeaconMappingDTO mapping;
 
     public static Context getAppContext() {
         return MyApp.context;
@@ -33,8 +36,12 @@ public class MyApp extends Application {
     }
 
     public static InternalCache getInternalCache(){ return internalCache;}
+
     public static List<RouteDTO> getRoutes(){ return rLst;}
     public static void setRoutes(List<RouteDTO> r){ rLst = r;}
+
+    public static BeaconMappingDTO getBeaconMapping(){ return mapping;}
+    public static void setBeaconMapping(BeaconMappingDTO b){ mapping = b;}
 
 
     @Override

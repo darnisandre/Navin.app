@@ -45,8 +45,8 @@
         <activity
             android:name=".view.MainTabActivity"
             android:label="@string/title_activity_main_tab"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".view.MainTabActivity">
+            android:parentActivityName=".view.MainTabActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
@@ -67,7 +67,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.CompassActivity"></activity>
+        <activity android:name=".view.CompassActivity" />
+        <activity android:name=".view.FreeNavSearchActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+        </activity>
     </application>
 
 </manifest>

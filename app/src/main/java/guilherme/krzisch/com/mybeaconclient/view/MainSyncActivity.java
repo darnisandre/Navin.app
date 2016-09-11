@@ -207,8 +207,7 @@ public class MainSyncActivity extends AppCompatActivity {
 
                 //acho que vamos ter que fazer isso pra toda estrutura
                 MyApp.setRoutes(MyApp.getInternalCache().getRoutes(1));
-
-
+                MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(1));
 
                 progressBar.setVisibility(View.INVISIBLE);
                 textViewLocal.setText(mapping.getLocation().getDescription());

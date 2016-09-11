@@ -1,12 +1,9 @@
 package guilherme.krzisch.com.mybeaconclient.view;
 
-import android.app.ActionBar;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
-import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +14,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,22 +22,11 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
-import com.estimote.sdk.Beacon;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
-import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.BeaconObject;
-import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
-import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconManager;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
-import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
-import guilherme.krzisch.com.mybeaconclient.view.util.ZoomOutPageTransformer;
-import navin.dto.RouteDTO;
 
 public class MainTabActivity extends AppCompatActivity {
 
@@ -55,6 +40,7 @@ public class MainTabActivity extends AppCompatActivity {
      */
     private SlidingTabLayout mSlidingTabLayout;
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    public static Context baseContext;
     @InjectView(R.id.mainTabActivityView) View mainTabActivityView;
 
     /**
@@ -64,6 +50,9 @@ public class MainTabActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        baseContext = getBaseContext();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
 
@@ -105,18 +94,18 @@ public class MainTabActivity extends AppCompatActivity {
 
         //inicia o monitoramento quando abre o app
 
-        ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
-        BeaconObject a =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d1", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
-                47873, 59567, 0, "", 0,0);
-        BeaconObject b =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d2", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
-                27773, 49738, 0, "", 0,0);
-        BeaconObject c =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d3", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
-                61786, 1024, 0, "", 0,0);
-        ar.add(a);
-        ar.add(b);
-        ar.add(c);
-        MyBeaconFacade.addBeaconsLocally(ar);
-        MyBeaconFacade.startMyBeaconsManagerOperation();
+//        ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
+//        BeaconObject a =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d1", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
+//                47873, 59567, 0, "", 0,0);
+//        BeaconObject b =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d2", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
+//                27773, 49738, 0, "", 0,0);
+//        BeaconObject c =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d3", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
+//                61786, 1024, 0, "", 0,0);
+//        ar.add(a);
+//        ar.add(b);
+//        ar.add(c);
+//        MyBeaconFacade.addBeaconsLocally(ar);
+//        MyBeaconFacade.startMyBeaconsManagerOperation();
 
     }
 
@@ -210,7 +199,7 @@ public class MainTabActivity extends AppCompatActivity {
                case 0:
                     return "Home";
                case 1:
-                   return "Free Navigation";
+                   return "Navegar sem rota";
                default:
                    return MyApp.getRoutes().get(position-2).getName();
             }
@@ -275,38 +264,29 @@ public class MainTabActivity extends AppCompatActivity {
         @Override
         public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                                  Bundle savedInstanceState) {
-            if(getArguments().getInt(ARG_SECTION_NUMBER) == 1) {
-                final View rootView = inflater.inflate(R.layout.fragment_main_tab, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d");
 
-                rootView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                        BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d1");
-                        BeaconObject bObj2 = MyBeaconManager.getInstance().getBeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d2");
-                        BeaconObject bObj3 = MyBeaconManager.getInstance().getBeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d3");
-
-                        textView.setText(String.valueOf(bObj.getRemoteId()) + " Distance: " + bObj.getLastDistanceRegistered() +
-                        "\n" + String.valueOf(bObj2.getRemoteId()) + " Distance: " + bObj2.getLastDistanceRegistered() +
-                                "\n" + String.valueOf(bObj3.getRemoteId()) + " Distance: " + bObj3.getLastDistanceRegistered() +
-                                "\n");
-                        // do your logic for long click and remember to return it
-                        return true; }});
-                return rootView;
-            }else if(getArguments().getInt(ARG_SECTION_NUMBER) == 2) {
-                View rootView = inflater.inflate(R.layout.fragment_no_category_tab, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-                return rootView;
-            }else{
-                View rootView = inflater.inflate(R.layout.fragment_category_tab, container, false);
-                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-                TextView textTitle = (TextView) rootView.findViewById(R.id.txtTitle);
-                textTitle.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getName());
-                textView.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
-                return rootView;
+            switch (getArguments().getInt(ARG_SECTION_NUMBER)) {
+                case 1:
+                    View rootView1 = inflater.inflate(R.layout.fragment_main_tab, container, false);
+                    rootView1.setOnLongClickListener(null);
+                    return rootView1;
+                case 2:
+                    View rootView2 = inflater.inflate(R.layout.fragment_no_category_tab, container, false);
+                    rootView2.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            // do your logic for long click and remember to return it
+                            Intent intent = new Intent(baseContext, FreeNavSearchActivity.class);
+                            startActivity(intent);
+                            return true; }});
+                    return rootView2;
+                default:
+                    View rootView3 = inflater.inflate(R.layout.fragment_category_tab, container, false);
+                    TextView textView = (TextView) rootView3.findViewById(R.id.section_label);
+                    TextView textTitle = (TextView) rootView3.findViewById(R.id.txtTitle);
+                    textTitle.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getName());
+                    textView.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
+                    return rootView3;
             }
         }
     }
