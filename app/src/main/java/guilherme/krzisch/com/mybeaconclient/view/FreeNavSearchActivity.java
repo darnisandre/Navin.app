@@ -24,6 +24,7 @@ import navin.dto.BeaconMappingDTO;
 public class FreeNavSearchActivity extends AppCompatActivity {
 
     ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
+    Thread t = new Thread();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,33 +40,35 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         TextView textView = (TextView) this.findViewById(R.id.textViewDistance);
         textView.setText("Distância: ");
 
-        //inicia o monitoramento quando abre o app
-
+        //busca todos beacons da configuração ativa
         BeaconMappingDTO mapping = MyApp.getBeaconMapping();
         List<BeaconDTO> bLst = mapping.getBeacons();
 
         ar = new ArrayList<BeaconObject>();
+
+        //adiciona todos eles no framework
         for (BeaconDTO b: bLst) {
             BeaconObject a = new BeaconObject(String.valueOf(b.getId()), b.getUuid(),
               Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), 0, "", 0,0);
             ar.add(a);
         }
-
         MyBeaconFacade.addBeaconsLocally(ar);
+
+        //inicia o monitoramento
         MyBeaconFacade.startMyBeaconsManagerOperation();
 
-        Thread t = new Thread() {
+        //inicia thread
+        t = new Thread() {
 
             @Override
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(1000);
+                        Thread.sleep(20);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 updateDistance();
-                                // update TextView here!
                             }
                         });
                     }
@@ -103,6 +106,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        t.interrupt();
         MyBeaconFacade.stopMyBeaconsManagerOperation();
     }
 
