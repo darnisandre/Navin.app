@@ -1,4 +1,4 @@
-package guilherme.krzisch.com.mybeaconclient.view.login;
+package guilherme.krzisch.com.mybeaconclient.view.old_files;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -18,7 +18,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
-import guilherme.krzisch.com.mybeaconclient.view.MainActivity;
+import guilherme.krzisch.com.mybeaconclient.view.old_files.MainActivity;
 
 /**
  * A login screen that offers login via email/password.

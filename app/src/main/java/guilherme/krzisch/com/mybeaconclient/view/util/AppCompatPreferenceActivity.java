@@ -1,4 +1,4 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.util;
 
 import android.content.res.Configuration;
 import android.os.Bundle;

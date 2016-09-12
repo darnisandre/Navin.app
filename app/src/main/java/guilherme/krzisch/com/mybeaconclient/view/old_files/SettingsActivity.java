@@ -1,4 +1,4 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.old_files;
 
 
 import android.annotation.TargetApi;
@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.view.util.AppCompatPreferenceActivity;
 
 import java.util.List;
 

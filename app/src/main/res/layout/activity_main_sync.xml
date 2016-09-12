@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="guilherme.krzisch.com.mybeaconclient.view.MainSyncActivity">
+    tools:context=".view.sync_options.MainSyncActivity">
 
     <CheckBox
         android:layout_width="wrap_content"

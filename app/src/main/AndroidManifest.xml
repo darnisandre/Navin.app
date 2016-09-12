@@ -17,18 +17,18 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.old_files.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.login.LoginActivity"
+            android:name=".view.old_files.LoginActivity"
             android:label="@string/title_activity_login"
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
-            android:name=".view.SettingsActivity"
+            android:name=".view.old_files.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".view.MainTabActivity">
             <meta-data
@@ -36,7 +36,7 @@
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
         <activity
-            android:name=".view.AboutActivity"
+            android:name=".view.sync_options.AboutActivity"
             android:parentActivityName=".view.MainTabActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -52,14 +52,14 @@
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
         <activity
-            android:name=".view.MainSyncActivity"
+            android:name=".view.sync_options.MainSyncActivity"
             android:label="@string/action_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.SplashActivity"
+            android:name=".view.splash_screen.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,12 +67,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.CompassActivity" />
-        <activity android:name=".view.FreeNavSearchActivity">
+        <activity android:name=".view.testes.CompassActivity" />
+        <activity android:name=".view.free_navigation.FreeNavSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
+        <activity android:name=".view.sync_options.TutorialActivity"></activity>
     </application>
 
 </manifest>

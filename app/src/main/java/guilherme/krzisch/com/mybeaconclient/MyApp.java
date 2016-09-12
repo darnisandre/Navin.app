@@ -9,6 +9,7 @@ import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeac
 import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
+import navin.dto.LocationDTO;
 import navin.dto.RouteDTO;
 import navin.util.InternalCache;
 import navin.util.RestClient;
@@ -25,8 +26,11 @@ public class MyApp extends Application {
     private static Context context;
     private static TTSManager ttsManager;
     private static InternalCache internalCache;
+
+    //beacons context
     private static List<RouteDTO> rLst;
     private static BeaconMappingDTO mapping;
+    private static LocationDTO loc;
 
     public static Context getAppContext() {
         return MyApp.context;
@@ -35,6 +39,7 @@ public class MyApp extends Application {
         return MyApp.ttsManager;
     }
 
+    //beacons methods
     public static InternalCache getInternalCache(){ return internalCache;}
 
     public static List<RouteDTO> getRoutes(){ return rLst;}
@@ -42,6 +47,9 @@ public class MyApp extends Application {
 
     public static BeaconMappingDTO getBeaconMapping(){ return mapping;}
     public static void setBeaconMapping(BeaconMappingDTO b){ mapping = b;}
+
+    public static LocationDTO getLocation(){ return loc;}
+    public static void setLocation(LocationDTO l){ loc = l;}
 
 
     @Override

@@ -1,20 +1,10 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.old_files;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.speech.tts.TextToSpeech;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,14 +12,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Locale;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.GateModule.GateManager;
+import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 
 

@@ -1,4 +1,4 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.sync_options;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -25,12 +25,12 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.view.testes.CompassActivity;
+import guilherme.krzisch.com.mybeaconclient.view.MainTabActivity;
 import navin.dto.BeaconMappingDTO;
 import navin.dto.LocationDTO;
 import navin.dto.RouteDTO;
@@ -206,6 +206,7 @@ public class MainSyncActivity extends AppCompatActivity {
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
 
                 //acho que vamos ter que fazer isso pra toda estrutura
+                MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
                 MyApp.setRoutes(MyApp.getInternalCache().getRoutes(1));
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(1));
 

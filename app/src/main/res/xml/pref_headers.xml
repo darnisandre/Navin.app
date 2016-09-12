@@ -3,16 +3,16 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="guilherme.krzisch.com.mybeaconclient.view.SettingsActivity$GeneralPreferenceFragment"
+        android:fragment="guilherme.krzisch.com.mybeaconclient.view.old_files.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" android:icon="@drawable/ic_info_black_24dp" />
 
     <header
-        android:fragment="guilherme.krzisch.com.mybeaconclient.view.SettingsActivity$NotificationPreferenceFragment"
+        android:fragment="guilherme.krzisch.com.mybeaconclient.view.old_files.SettingsActivity$NotificationPreferenceFragment"
         android:title="@string/pref_header_notifications"
         android:icon="@drawable/ic_notifications_black_24dp" />
 
     <header
-        android:fragment="guilherme.krzisch.com.mybeaconclient.view.SettingsActivity$DataSyncPreferenceFragment"
+        android:fragment="guilherme.krzisch.com.mybeaconclient.view.old_files.SettingsActivity$DataSyncPreferenceFragment"
         android:title="@string/pref_header_data_sync" android:icon="@drawable/ic_sync_black_24dp" />
 
 </preference-headers>

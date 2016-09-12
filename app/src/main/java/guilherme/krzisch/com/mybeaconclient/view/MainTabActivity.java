@@ -2,8 +2,6 @@ package guilherme.krzisch.com.mybeaconclient.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +23,8 @@ import android.widget.TextView;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
+import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
 
@@ -79,60 +79,14 @@ public class MainTabActivity extends AppCompatActivity {
         //muda efeito da transição de abas
         mViewPager.setPageTransformer(true, new DepthPageTransformer());
 
-        //mostra na tela a posição do GPS
-        final String latitude = (this.getLatitude(this.mainTabActivityView));
-        final String longitude = (this.getLongitude(this.mainTabActivityView));
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Latitude: " + latitude + " Longitude: " + longitude, Snackbar.LENGTH_LONG)
+                Snackbar.make(view, MyApp.getLocation().getDescription().toString() + " - " + MyApp.getLocation().getActiveConfiguration().getDescription().toString(), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
-
-        //inicia o monitoramento quando abre o app
-
-//        ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
-//        BeaconObject a =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d1", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
-//                47873, 59567, 0, "", 0,0);
-//        BeaconObject b =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d2", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
-//                27773, 49738, 0, "", 0,0);
-//        BeaconObject c =new BeaconObject("b9407f30-f5f8-466e-aff9-25556b57fe6d3", "b9407f30-f5f8-466e-aff9-25556b57fe6d",
-//                61786, 1024, 0, "", 0,0);
-//        ar.add(a);
-//        ar.add(b);
-//        ar.add(c);
-//        MyBeaconFacade.addBeaconsLocally(ar);
-//        MyBeaconFacade.startMyBeaconsManagerOperation();
-
-    }
-
-    public String getLatitude(View view){
-        //pega a posição atual do GPS
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(location != null) {
-            double latitude = location.getLatitude();
-            return Double.toString(latitude);
-        }
-        else{
-            return "0";
-        }
-    }
-
-    public String getLongitude(View view){
-        //pega a posição atual do GPS
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if(location != null){
-        double longitude = location.getLongitude();
-        return Double.toString(longitude);
-        }
-        else{
-            return "0";
-        }
     }
 
     @Override
@@ -269,16 +223,19 @@ public class MainTabActivity extends AppCompatActivity {
                 case 1:
                     View rootView1 = inflater.inflate(R.layout.fragment_main_tab, container, false);
                     rootView1.setOnLongClickListener(null);
+                    TextView textTitle2 = (TextView) rootView1.findViewById(R.id.txtTitle);
+                    textTitle2.setText("Bem-vindo ao sistema de navegação indoor Nav.In." +
+                            "Você está no " + MyApp.getLocation().getDescription().toString());
                     return rootView1;
                 case 2:
                     View rootView2 = inflater.inflate(R.layout.fragment_no_category_tab, container, false);
-                    rootView2.setOnLongClickListener(new View.OnLongClickListener() {
+                    rootView2.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public boolean onLongClick(View v) {
+                        public void onClick(View view) {
                             // do your logic for long click and remember to return it
                             Intent intent = new Intent(baseContext, FreeNavSearchActivity.class);
                             startActivity(intent);
-                            return true; }});
+                            }});
                     return rootView2;
                 default:
                     View rootView3 = inflater.inflate(R.layout.fragment_category_tab, container, false);

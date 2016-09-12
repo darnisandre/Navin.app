@@ -1,6 +1,5 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.sync_options;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 

@@ -8,7 +8,7 @@
               android:paddingLeft="@dimen/activity_horizontal_margin"
               android:paddingRight="@dimen/activity_horizontal_margin"
               android:paddingTop="@dimen/activity_vertical_margin"
-              tools:context="guilherme.krzisch.com.mybeaconclient.view.login.LoginActivity">
+              tools:context=".view.old_files.LoginActivity">
 
     <!-- Login progress -->
     <ProgressBar

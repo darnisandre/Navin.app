@@ -1,4 +1,4 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.testes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,12 +1,10 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.free_navigation;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
-
-import com.estimote.sdk.Beacon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +21,10 @@ import navin.dto.BeaconMappingDTO;
 
 public class FreeNavSearchActivity extends AppCompatActivity {
 
+    @InjectView(R.id.FreeNavSearchActivityView) View FreeNavSearchActivityView;
     ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
     Thread t = new Thread();
+    BeaconDTO lastBeacon = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,16 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         actionBar.setIcon(R.mipmap.ic_launcher);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        TextView textView = (TextView) this.findViewById(R.id.textViewDistance);
-        textView.setText("Distância: ");
+        MyApp.getAppTTS().initQueue("Ande pelo local..");
+        MyApp.getAppTTS().addQueue("Assim que for identificado um experimento você será notificado.");
+
+        FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // do your logic for long click and remember to return it
+                MyApp.getAppTTS().initQueue("Buscando experimentos..");
+                StartFreeNavigation();
+                }});
 
         //busca todos beacons da configuração ativa
         BeaconMappingDTO mapping = MyApp.getBeaconMapping();
@@ -58,17 +66,27 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         MyBeaconFacade.startMyBeaconsManagerOperation();
 
         //inicia thread
+        StartFreeNavigation();
+
+    }
+
+    private void StartFreeNavigation() {
+        TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
+        TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
+        textViewAction.setText("Buscando..");
+        textViewDesc.setText("");
+
         t = new Thread() {
 
             @Override
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(20);
+                        Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                updateDistance();
+                                verifyIfHasProximity();
                             }
                         });
                     }
@@ -76,8 +94,11 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                 }
             }
         };
-
         t.start();
+    }
+
+    private void StopFreeNavigation() {
+        t.interrupt();
     }
 
     @Override
@@ -88,42 +109,33 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        switch (item.getItemId()){
-//            case R.id.action_about:
-//                goToAboutActivity();
-//                return true;
-//            case R.id.action_refresh:
-//                refresh();
-//                return true;
-//        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         t.interrupt();
         MyBeaconFacade.stopMyBeaconsManagerOperation();
     }
 
-    public void updateDistance(){
-        TextView textViewName = (TextView) this.findViewById(R.id.textViewBeaconName);
-        TextView textViewDesc = (TextView) this.findViewById(R.id.textViewBeaconDesc);
-        TextView textViewDist = (TextView) this.findViewById(R.id.textViewDistance);
-
+    public void verifyIfHasProximity(){
+        TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
+        TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         List<BeaconDTO> lst = MyApp.getBeaconMapping().getBeacons();
 
         for(BeaconDTO b : lst){
-            BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
-            if(bObj.getLastDistanceRegistered() < 1.2) {
-                textViewName.setText("UUID: " + b.getUuid());
-                textViewDesc.setText("Descrição: " + b.getDescription());
-                textViewDist.setText("Distância: " + bObj.getLastDistanceRegistered());
+            if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
+                BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
+                if (bObj.getLastDistanceRegistered() < 1.5) {
+                    lastBeacon = b;
+                    textViewAction.setText("Você está próximo a um experimento, a qualquer momento pressione no centro da tela para continuar a navegação.");
+                    textViewDesc.setText("Este é o " + b.getDescription());
+                    MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                    MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
+                    StopFreeNavigation();
+                    return;
+                }
             }
         }
+        StopFreeNavigation();
+        StartFreeNavigation();
+        return;
     }
 }

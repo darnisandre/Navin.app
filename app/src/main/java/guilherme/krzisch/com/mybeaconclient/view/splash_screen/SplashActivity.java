@@ -1,8 +1,10 @@
-package guilherme.krzisch.com.mybeaconclient.view;
+package guilherme.krzisch.com.mybeaconclient.view.splash_screen;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import guilherme.krzisch.com.mybeaconclient.view.sync_options.MainSyncActivity;
 
 /**
  * Created by deeee on 17/08/2016.
