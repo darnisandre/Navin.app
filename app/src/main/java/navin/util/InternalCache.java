@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import navin.dto.BeaconMappingDTO;
+import navin.dto.CategoryDTO;
 import navin.dto.LocationDTO;
 import navin.dto.RouteDTO;
 
@@ -19,6 +20,7 @@ import navin.dto.RouteDTO;
 public class InternalCache {
     private static final String LOCATION_KEY = "locations";
     private static final String ROUTES_KEY = "routes_%s";
+    private static final String CATEGORIES_KEY = "categories_%s";
     private static final String ROUTE_KEY = "route_%s";
     private static final String BEACON_MAPPING_KEY = "beacon_mapping_%s";
 
@@ -38,6 +40,16 @@ public class InternalCache {
             InternalStorage.writeObject(context,routesKey,routes);
         }
         return routes;
+    }
+
+    public List<CategoryDTO> getCategories(final int locationId){
+        String routeKey = String.format(CATEGORIES_KEY,locationId);
+        List<CategoryDTO> categories = (List<CategoryDTO>) InternalStorage.readObject(context,routeKey);
+        if(categories == null){
+            categories = restClient.getCategories(locationId);
+            InternalStorage.writeObject(context,routeKey,categories);
+        }
+        return categories;
     }
 
     public RouteDTO getRoute(final int id) {
@@ -83,6 +95,7 @@ public class InternalCache {
             }
         }
         InternalStorage.deleteObject(context,String.format(ROUTES_KEY,locationId));
+        InternalStorage.deleteObject(context,String.format(CATEGORIES_KEY,locationId));
     }
 
     private void storeCacheLocations(HashMap<Long, LocationDTO> cacheLocations) {

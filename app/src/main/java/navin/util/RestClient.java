@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import navin.dto.BeaconMappingDTO;
+import navin.dto.CategoryDTO;
 import navin.dto.LocationDTO;
 import navin.dto.RouteDTO;
 
@@ -32,6 +33,11 @@ public class RestClient {
         final String url = restUrl + "route/{id}";
         RouteDTO route = restTemplate.getForObject(url, RouteDTO.class,id);
         return route;
+    }
+    public List<CategoryDTO> getCategories(final int locationId){
+        final String url = restUrl + "category/location/{id}";
+        CategoryDTO[] categories= restTemplate.getForObject(url, CategoryDTO[].class,locationId);
+        return Arrays.asList(categories);
     }
     public BeaconMappingDTO getBeaconMapping(final int locationId){
         final String url = restUrl + "beacon/location/{id}";
