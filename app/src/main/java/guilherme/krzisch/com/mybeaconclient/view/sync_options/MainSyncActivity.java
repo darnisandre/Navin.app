@@ -209,8 +209,9 @@ public class MainSyncActivity extends AppCompatActivity {
 
                 //acho que vamos ter que fazer isso pra toda estrutura
                 MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
-                MyApp.setRoutes(MyApp.getInternalCache().getRoutes(1));
-                MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(1));
+                MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+                MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
+                MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 
                 progressBar.setVisibility(View.INVISIBLE);
                 textViewLocal.setText(mapping.getLocation().getDescription());// + "\n" + category.getName());

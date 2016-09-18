@@ -20,14 +20,18 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import java.util.List;
+
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.add_routes.AddRouteActivity;
 import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
+import guilherme.krzisch.com.mybeaconclient.view.sync_options.TutorialActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
+import navin.dto.BeaconDTO;
 
 public class MainTabActivity extends AppCompatActivity {
 
@@ -109,6 +113,9 @@ public class MainTabActivity extends AppCompatActivity {
             case R.id.action_addroute:
                 goToAddRouteActivity();
                 return true;
+            case R.id.action_tuto:
+                goToTutorialActivity();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -117,6 +124,11 @@ public class MainTabActivity extends AppCompatActivity {
         Intent intent = getIntent();
         startActivity(intent);
         finish();
+    }
+
+    private void goToTutorialActivity(){
+        Intent intent = new Intent(getBaseContext(), TutorialActivity.class);
+        startActivity(intent);
     }
 
     private void goToAboutActivity(){
@@ -157,7 +169,7 @@ public class MainTabActivity extends AppCompatActivity {
 
             switch (position) {
                case 0:
-                    return "Home";
+                    return "Início";
                case 1:
                    return "Navegar sem rota";
                default:
@@ -247,8 +259,16 @@ public class MainTabActivity extends AppCompatActivity {
                     View rootView3 = inflater.inflate(R.layout.fragment_category_tab, container, false);
                     TextView textView = (TextView) rootView3.findViewById(R.id.section_label);
                     TextView textTitle = (TextView) rootView3.findViewById(R.id.txtTitle);
+                    TextView textBeaconLst = (TextView) rootView3.findViewById(R.id.textViewBeaconLst);
                     textTitle.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getName());
                     textView.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
+                    List<BeaconDTO> beaconLst = (MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getBeacons());
+                    String bodyText = "";
+                    for(BeaconDTO b : beaconLst){
+                        bodyText += b.getDescription();
+                        bodyText += "\n";
+                    }
+                    textBeaconLst.setText(bodyText);
                     return rootView3;
             }
         }

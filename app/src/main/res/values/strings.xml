@@ -79,4 +79,5 @@
     <string name="title_activity_free_nav">Nav.In</string>
     <string name="action_addroute">Adicionar Rota</string>
     <string name="action_save">Salvar</string>
+    <string name="action_tuto">Tutorial</string>
 </resources>

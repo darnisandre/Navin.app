@@ -3,12 +3,14 @@ package guilherme.krzisch.com.mybeaconclient;
 import android.app.Application;
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
+import navin.dto.CategoryDTO;
 import navin.dto.LocationDTO;
 import navin.dto.RouteDTO;
 import navin.util.InternalCache;
@@ -32,6 +34,7 @@ public class MyApp extends Application {
     private static List<RouteDTO> rLst;
     private static BeaconMappingDTO mapping;
     private static LocationDTO loc;
+    private static List<CategoryDTO> cat;
 
     public static Context getAppContext() {
         return MyApp.context;
@@ -51,6 +54,9 @@ public class MyApp extends Application {
 
     public static LocationDTO getLocation(){ return loc;}
     public static void setLocation(LocationDTO l){ loc = l;}
+
+    public static List<CategoryDTO> getCategories(){ return cat;}
+    public static void setCategories(List<CategoryDTO> c){ cat = c;}
 
 
     @Override
