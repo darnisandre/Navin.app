@@ -4,14 +4,14 @@
     tools:context="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity">
 
     <!-- Refresh -->
-    <item android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_action_refresh"
-        android:title="@string/action_refresh"
-        app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_addroute"
+        android:icon="@drawable/ic_action_add_to_queue"
+        android:title="@string/action_addroute"
+        app:showAsAction="always" />
 
     <item android:id="@+id/action_about"
         android:title="@string/action_about"
         android:icon="@drawable/ic_action_about"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="never"/>
 
 </menu>

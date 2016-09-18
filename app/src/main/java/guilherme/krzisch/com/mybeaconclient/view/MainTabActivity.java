@@ -23,6 +23,7 @@ import android.widget.TextView;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.view.add_routes.AddRouteActivity;
 import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
@@ -105,8 +106,8 @@ public class MainTabActivity extends AppCompatActivity {
             case R.id.action_about:
                 goToAboutActivity();
                 return true;
-            case R.id.action_refresh:
-                refresh();
+            case R.id.action_addroute:
+                goToAddRouteActivity();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -120,6 +121,11 @@ public class MainTabActivity extends AppCompatActivity {
 
     private void goToAboutActivity(){
         Intent intent = new Intent(getBaseContext(), AboutActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToAddRouteActivity(){
+        Intent intent = new Intent(getBaseContext(), AddRouteActivity.class);
         startActivity(intent);
     }
 

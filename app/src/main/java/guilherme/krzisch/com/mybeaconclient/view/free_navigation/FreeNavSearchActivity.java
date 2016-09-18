@@ -2,6 +2,7 @@ package guilherme.krzisch.com.mybeaconclient.view.free_navigation;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.BeaconObject;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconManager;
+import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
 
@@ -40,13 +42,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         MyApp.getAppTTS().initQueue("Ande pelo local..");
         MyApp.getAppTTS().addQueue("Assim que for identificado um experimento você será notificado.");
 
-        FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // do your logic for long click and remember to return it
-                MyApp.getAppTTS().initQueue("Buscando experimentos..");
-                StartFreeNavigation();
-                }});
+        FreeNavSearchActivityView.setOnClickListener(null);
 
         //busca todos beacons da configuração ativa
         BeaconMappingDTO mapping = MyApp.getBeaconMapping();
@@ -71,6 +67,9 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     }
 
     private void StartFreeNavigation() {
+
+        FreeNavSearchActivityView.setOnClickListener(null);
+
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         textViewAction.setText("Buscando..");
@@ -86,18 +85,23 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Log.i("Thread", "Count " + Thread.activeCount());
                                 verifyIfHasProximity();
                             }
                         });
                     }
                 } catch (InterruptedException e) {
+                    Log.i("Thread", "Interrupted");
                 }
             }
         };
+
+        Log.i("Thread", "Started");
         t.start();
     }
 
     private void StopFreeNavigation() {
+        Log.i("Thread", "Stoped");
         t.interrupt();
     }
 
@@ -113,6 +117,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         super.onDestroy();
         t.interrupt();
         MyBeaconFacade.stopMyBeaconsManagerOperation();
+        MyApp.getAppTTS().initQueue("");
     }
 
     public void verifyIfHasProximity(){
@@ -129,6 +134,15 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                     textViewDesc.setText("Este é o " + b.getDescription());
                     MyApp.getAppTTS().addQueue("" + textViewAction.getText());
                     MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
+
+                    FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // do your logic for long click and remember to return it
+                            MyApp.getAppTTS().initQueue("Buscando experimentos..");
+                            StartFreeNavigation();
+                        }});
+
                     StopFreeNavigation();
                     return;
                 }

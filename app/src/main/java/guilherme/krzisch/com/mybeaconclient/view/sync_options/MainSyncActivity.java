@@ -205,7 +205,7 @@ public class MainSyncActivity extends AppCompatActivity {
                 RouteDTO r = MyApp.getInternalCache().getRoutes(1).get(0);
                 LocationDTO l = MyApp.getInternalCache().getLocations(0,0).get(0);
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
-                CategoryDTO category = MyApp.getInternalCache().getCategories(1).get(0);
+                //CategoryDTO category = MyApp.getInternalCache().getCategories(1).get(0);
 
                 //acho que vamos ter que fazer isso pra toda estrutura
                 MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
@@ -213,7 +213,7 @@ public class MainSyncActivity extends AppCompatActivity {
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(1));
 
                 progressBar.setVisibility(View.INVISIBLE);
-                textViewLocal.setText(mapping.getLocation().getDescription() + "\n" + category.getName());
+                textViewLocal.setText(mapping.getLocation().getDescription());// + "\n" + category.getName());
                 textViewLocal.setVisibility(View.VISIBLE);
 
                 //voz informando que encontrou a localização
