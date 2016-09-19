@@ -42,6 +42,20 @@ public class InternalCache {
         return routes;
     }
 
+    public void setRoutes(final int locationId, List<RouteDTO> routes) {
+        String routesKey = String.format(ROUTES_KEY,locationId);
+        InternalStorage.writeObject(context,routesKey,routes);
+    }
+
+    public void refreshRoutes(final int locationId) {
+        String routesKey = String.format(ROUTES_KEY,locationId);
+        List<RouteDTO> routes = null;
+        if(routes == null){
+            routes = restClient.getRoutes(locationId);
+            InternalStorage.writeObject(context,routesKey,routes);
+        }
+    }
+
     public List<CategoryDTO> getCategories(final int locationId){
         String routeKey = String.format(CATEGORIES_KEY,locationId);
         List<CategoryDTO> categories = (List<CategoryDTO>) InternalStorage.readObject(context,routeKey);

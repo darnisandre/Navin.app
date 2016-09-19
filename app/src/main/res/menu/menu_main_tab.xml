@@ -9,6 +9,11 @@
         android:title="@string/action_addroute"
         app:showAsAction="always" />
 
+    <item android:id="@+id/action_clear"
+        android:title="@string/action_clear"
+        android:icon="@drawable/ic_action_about"
+        app:showAsAction="never"/>
+
     <item android:id="@+id/action_tuto"
         android:title="@string/action_tuto"
         android:icon="@drawable/ic_action_about"

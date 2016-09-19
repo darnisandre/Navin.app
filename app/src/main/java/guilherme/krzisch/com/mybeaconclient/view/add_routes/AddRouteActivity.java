@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -73,15 +74,14 @@ public class AddRouteActivity extends AppCompatActivity {
     private void saveNewRoute() {
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.listViewCategories);
+        EditText editName = (EditText) findViewById(R.id.editTextName);
+        EditText editDesc = (EditText) findViewById(R.id.editTextDesc);
 
         int len = listView.getCount();
         SparseBooleanArray checked = listView.getCheckedItemPositions();
 
         //Cria o objeto para a nova rota
         RouteDTO newRoute = new RouteDTO();
-        newRoute.setId((long)99);
-        newRoute.setName("Rota personalizada");
-        newRoute.setDescription("Rota criada pelo usuário");
 
         //verifica as categorias selecionadas na view
         List<CategoryDTO> categoryLstSelected = new ArrayList<CategoryDTO>();
@@ -89,32 +89,49 @@ public class AddRouteActivity extends AppCompatActivity {
             if (checked.get(i)) {
                 CategoryDTO item = categories.get(i);
                 categoryLstSelected.add(item);
-                //TODO criar rota com as categorias selecionadas
                 /* do whatever you want with the checked item */
                 Log.i("Item", "" + item.getId());
 
             }
         }
 
-        //pega os beacons referentes as categorias selecionas na view
-        List<BeaconDTO> beaconsLstSelected = new ArrayList<BeaconDTO>();
-        for(CategoryDTO c : categoryLstSelected){
-            for(BeaconDTO b : c.getBeacons()) {
-                beaconsLstSelected.add(b);
+        if(categoryLstSelected.size() > 0) {
+            //pega os beacons referentes as categorias selecionas na view
+            List<BeaconDTO> beaconsLstSelected = new ArrayList<BeaconDTO>();
+            for (CategoryDTO c : categoryLstSelected) {
+                for (BeaconDTO b : c.getBeacons()) {
+                    beaconsLstSelected.add(b);
+                }
             }
-        }
 
-        //adiciona os beacons que fazem parte da rota
-        newRoute.setBeacons(beaconsLstSelected);
+            //adiciona os beacons que fazem parte da rota
+            newRoute.setBeacons(beaconsLstSelected);
 
-        //Salva na lista de rotas
-        List<RouteDTO> routeLst = MyApp.getRoutes();
-        ArrayList<RouteDTO> newValues = new ArrayList<RouteDTO>();
-        for(RouteDTO r : routeLst){
-            newValues.add(r);
+
+            List<RouteDTO> routeLst = MyApp.getRoutes();
+            long routeId = 0;
+
+            //Salva na lista de rotas
+            ArrayList<RouteDTO> newValues = new ArrayList<RouteDTO>();
+            for (RouteDTO r : routeLst) {
+                newValues.add(r);
+                //pega o maior id de rota
+                if(r.getId() > routeId) routeId = r.getId();
+            }
+
+            routeId++;
+
+            newRoute.setId(routeId);
+
+            newRoute.setName(editName.getText().toString().equals("") ? "Rota personalizada " + routeId : editName.getText().toString());
+            newRoute.setDescription(editDesc.getText().toString().equals("") ? "Rota criada pelo usuário" : editDesc.getText().toString());
+
+            newValues.add(newRoute);
+            MyApp.setRoutes(newValues);
+
+            //TODO salvar rotas na cache
+            MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
         }
-        newValues.add(newRoute);
-        MyApp.setRoutes(newValues);
 
         Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
         startActivity(intent);

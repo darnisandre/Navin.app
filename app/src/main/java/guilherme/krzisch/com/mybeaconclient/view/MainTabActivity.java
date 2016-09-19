@@ -116,6 +116,9 @@ public class MainTabActivity extends AppCompatActivity {
             case R.id.action_tuto:
                 goToTutorialActivity();
                 return true;
+            case R.id.action_clear:
+                clearRoutes();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -124,6 +127,13 @@ public class MainTabActivity extends AppCompatActivity {
         Intent intent = getIntent();
         startActivity(intent);
         finish();
+    }
+
+    private void clearRoutes(){
+        //TODO recarregar rotas do servidor
+        MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
+        MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+        refresh();
     }
 
     private void goToTutorialActivity(){
