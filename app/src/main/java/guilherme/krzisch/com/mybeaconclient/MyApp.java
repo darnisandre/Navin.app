@@ -65,7 +65,7 @@ public class MyApp extends Application {
         ttsManager.init(this);
         super.onCreate();
         MyApp.context = getApplicationContext();
-        internalCache = new InternalCache(restUrl,context);
+        internalCache = new InternalCache(restUrl, context);
         MyBeaconFacade.initFramework(this, false, BAASBOX_URL, PORT, APP_CODE, BEACON_RANGE_IDENTIFIER, UUID);
     }
 }

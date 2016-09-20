@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,11 +132,17 @@ public class AddRouteActivity extends AppCompatActivity {
 
             //TODO salvar rotas na cache
             MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
+
+            Toast.makeText(getBaseContext(), "Rota adicionada com sucesso!", Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
+            startActivity(intent);
+            finish();
+        }else{
+            Toast.makeText(getBaseContext(), "É necessário selecionar pelo menos uma categoria!", Toast.LENGTH_LONG).show();
         }
 
-        Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
-        startActivity(intent);
-        finish();
+
     }
 
 }

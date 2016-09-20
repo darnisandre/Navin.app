@@ -33,55 +33,55 @@ public class InternalCache {
     }
 
     public List<RouteDTO> getRoutes(final int locationId) {
-        String routesKey = String.format(ROUTES_KEY,locationId);
-        List<RouteDTO> routes = (List<RouteDTO>) InternalStorage.readObject(context,routesKey);
+        String routesKey = String.format(ROUTES_KEY, locationId);
+        List<RouteDTO> routes = (List<RouteDTO>) InternalStorage.readObject(context, routesKey);
         if(routes == null){
             routes = restClient.getRoutes(locationId);
-            InternalStorage.writeObject(context,routesKey,routes);
+            InternalStorage.writeObject(context, routesKey, routes);
         }
         return routes;
     }
 
     public void setRoutes(final int locationId, List<RouteDTO> routes) {
-        String routesKey = String.format(ROUTES_KEY,locationId);
-        InternalStorage.writeObject(context,routesKey,routes);
+        String routesKey = String.format(ROUTES_KEY, locationId);
+        InternalStorage.writeObject(context, routesKey, routes);
     }
 
     public void refreshRoutes(final int locationId) {
-        String routesKey = String.format(ROUTES_KEY,locationId);
+        String routesKey = String.format(ROUTES_KEY, locationId);
         List<RouteDTO> routes = null;
         if(routes == null){
             routes = restClient.getRoutes(locationId);
-            InternalStorage.writeObject(context,routesKey,routes);
+            InternalStorage.writeObject(context, routesKey, routes);
         }
     }
 
     public List<CategoryDTO> getCategories(final int locationId){
-        String routeKey = String.format(CATEGORIES_KEY,locationId);
-        List<CategoryDTO> categories = (List<CategoryDTO>) InternalStorage.readObject(context,routeKey);
+        String routeKey = String.format(CATEGORIES_KEY, locationId);
+        List<CategoryDTO> categories = (List<CategoryDTO>) InternalStorage.readObject(context, routeKey);
         if(categories == null){
             categories = restClient.getCategories(locationId);
-            InternalStorage.writeObject(context,routeKey,categories);
+            InternalStorage.writeObject(context, routeKey, categories);
         }
         return categories;
     }
 
     public RouteDTO getRoute(final int id) {
-        String routeKey = String.format(ROUTE_KEY,id);
-        RouteDTO route = (RouteDTO) InternalStorage.readObject(context,routeKey);
+        String routeKey = String.format(ROUTE_KEY, id);
+        RouteDTO route = (RouteDTO) InternalStorage.readObject(context, routeKey);
         if(route == null){
             route = restClient.getRoute(id);
-            InternalStorage.writeObject(context,routeKey,route);
+            InternalStorage.writeObject(context, routeKey, route);
         }
         return route;
     }
 
     public BeaconMappingDTO getBeaconMapping(final int locationId) {
-        String beaconMappingKey = String.format(BEACON_MAPPING_KEY,locationId);
-        BeaconMappingDTO mapping = (BeaconMappingDTO) InternalStorage.readObject(context,beaconMappingKey);
-        if(mapping==null){
+        String beaconMappingKey = String.format(BEACON_MAPPING_KEY, locationId);
+        BeaconMappingDTO mapping = (BeaconMappingDTO) InternalStorage.readObject(context, beaconMappingKey);
+        if(mapping == null){
             mapping = restClient.getBeaconMapping(locationId);
-            InternalStorage.writeObject(context,beaconMappingKey,mapping);
+            InternalStorage.writeObject(context, beaconMappingKey, mapping);
         }
         return mapping;
     }
@@ -91,7 +91,7 @@ public class InternalCache {
         HashMap<Long,LocationDTO> cacheLocations = getCacheLocations();
         for(LocationDTO l : locations){
             LocationDTO cacheLocation = cacheLocations.get(l.getId());
-            if(cacheLocation!=null && l.getLastUpdated().after(cacheLocation.getLastUpdated())){
+            if(cacheLocation != null && l.getLastUpdated().after(cacheLocation.getLastUpdated())){
                 cleanCacheLocation(l.getId());
             }
             cacheLocations.put(l.getId(),l);
@@ -101,25 +101,25 @@ public class InternalCache {
     }
 
     private void cleanCacheLocation(Long locationId) {
-        InternalStorage.deleteObject(context,String.format(BEACON_MAPPING_KEY,locationId));
-        List<RouteDTO> routes = (List<RouteDTO>) InternalStorage.readObject(context,String.format(ROUTES_KEY,locationId));
+        InternalStorage.deleteObject(context,String.format(BEACON_MAPPING_KEY, locationId));
+        List<RouteDTO> routes = (List<RouteDTO>) InternalStorage.readObject(context, String.format(ROUTES_KEY, locationId));
         if(routes != null){
             for(RouteDTO route : routes){
-                InternalStorage.deleteObject(context, String.format(ROUTE_KEY,route.getId()));
+                InternalStorage.deleteObject(context, String.format(ROUTE_KEY, route.getId()));
             }
         }
-        InternalStorage.deleteObject(context,String.format(ROUTES_KEY,locationId));
-        InternalStorage.deleteObject(context,String.format(CATEGORIES_KEY,locationId));
+        InternalStorage.deleteObject(context, String.format(ROUTES_KEY, locationId));
+        InternalStorage.deleteObject(context, String.format(CATEGORIES_KEY, locationId));
     }
 
     private void storeCacheLocations(HashMap<Long, LocationDTO> cacheLocations) {
-        InternalStorage.writeObject(context,LOCATION_KEY,cacheLocations);
+        InternalStorage.writeObject(context, LOCATION_KEY, cacheLocations);
     }
 
-    private HashMap<Long,LocationDTO> getCacheLocations(){
-        HashMap<Long,LocationDTO>  map = (HashMap<Long,LocationDTO>) InternalStorage.readObject(context,LOCATION_KEY);
+    private HashMap<Long, LocationDTO> getCacheLocations(){
+        HashMap<Long, LocationDTO>  map = (HashMap<Long, LocationDTO>) InternalStorage.readObject(context, LOCATION_KEY);
         if(map==null){
-            map = new HashMap<Long,LocationDTO>();
+            map = new HashMap<Long, LocationDTO>();
         }
         return map;
     }

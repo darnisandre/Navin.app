@@ -18,7 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -32,6 +34,7 @@ import guilherme.krzisch.com.mybeaconclient.view.sync_options.TutorialActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
 import navin.dto.BeaconDTO;
+import navin.dto.CategoryDTO;
 
 public class MainTabActivity extends AppCompatActivity {
 
@@ -88,6 +91,7 @@ public class MainTabActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MyApp.getAppTTS().addQueue(MyApp.getLocation().getDescription().toString() + " - " + MyApp.getLocation().getActiveConfiguration().getDescription().toString());
                 Snackbar.make(view, MyApp.getLocation().getDescription().toString() + " - " + MyApp.getLocation().getActiveConfiguration().getDescription().toString(), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -131,6 +135,7 @@ public class MainTabActivity extends AppCompatActivity {
 
     private void clearRoutes(){
         //TODO recarregar rotas do servidor
+        Toast.makeText(getBaseContext(), "Rotas personalizadas removidas!", Toast.LENGTH_LONG).show();
         MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
         MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
         refresh();
@@ -251,9 +256,10 @@ public class MainTabActivity extends AppCompatActivity {
                 case 1:
                     View rootView1 = inflater.inflate(R.layout.fragment_main_tab, container, false);
                     rootView1.setOnLongClickListener(null);
-                    TextView textTitle2 = (TextView) rootView1.findViewById(R.id.txtTitle);
+                    TextView textTitle2 = (TextView) rootView1.findViewById(R.id.textViewTitle);
                     textTitle2.setText("Bem-vindo ao sistema de navegação indoor Nav.In." +
                             "Você está no " + MyApp.getLocation().getDescription().toString());
+                    textTitle2.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
                     return rootView1;
                 case 2:
                     View rootView2 = inflater.inflate(R.layout.fragment_no_category_tab, container, false);
@@ -267,18 +273,27 @@ public class MainTabActivity extends AppCompatActivity {
                     return rootView2;
                 default:
                     View rootView3 = inflater.inflate(R.layout.fragment_category_tab, container, false);
-                    TextView textView = (TextView) rootView3.findViewById(R.id.section_label);
-                    TextView textTitle = (TextView) rootView3.findViewById(R.id.txtTitle);
-                    TextView textBeaconLst = (TextView) rootView3.findViewById(R.id.textViewBeaconLst);
+                    TextView textViewDesc = (TextView) rootView3.findViewById(R.id.textViewDesc);
+                    TextView textTitle = (TextView) rootView3.findViewById(R.id.textViewTitle);
+                    TextView textCatLst = (TextView) rootView3.findViewById(R.id.textViewCat);
                     textTitle.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getName());
-                    textView.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
+                    textViewDesc.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
                     List<BeaconDTO> beaconLst = (MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getBeacons());
                     String bodyText = "";
-                    for(BeaconDTO b : beaconLst){
-                        bodyText += b.getDescription();
-                        bodyText += "\n";
+                    List<CategoryDTO> cLst = MyApp.getCategories();
+                    for(CategoryDTO c : cLst){
+                        List<BeaconDTO> bLst = c.getBeacons();
+                        for(BeaconDTO b : bLst){
+                            for(BeaconDTO br : beaconLst){
+                                if(b.getId().toString().equals(br.getId().toString())){
+                                    bodyText += c.getName();
+                                    bodyText += "\n";
+                                }
+                            }
+                        }
                     }
-                    textBeaconLst.setText(bodyText);
+
+                    textCatLst.setText(bodyText);
                     return rootView3;
             }
         }

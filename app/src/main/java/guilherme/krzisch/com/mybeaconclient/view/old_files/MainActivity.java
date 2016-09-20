@@ -24,7 +24,7 @@ import guilherme.krzisch.com.mybeaconclient.view.util.TTSManager;
 public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.lblLatitudeValue) TextView txtLatitude;
     @InjectView(R.id.lblLongitudeValue) TextView txtLongitude;
-    @InjectView(R.id.txtTitle) TextView txtTitle;
+    @InjectView(R.id.textViewTitle) TextView txtTitle;
     @InjectView(R.id.mainActivityView) View mainActivityView;
     @InjectView(R.id.editTextGateDescription) EditText editTextGateDescription;
     TTSManager ttsManager = null;

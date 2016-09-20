@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -72,7 +74,9 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
+        ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
         textViewAction.setText("Buscando..");
+        loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
         t = new Thread() {
@@ -123,6 +127,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     public void verifyIfHasProximity(){
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
+        ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
         List<BeaconDTO> lst = MyApp.getBeaconMapping().getBeacons();
 
         for(BeaconDTO b : lst){
@@ -130,6 +135,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                 BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
                 if (bObj.getLastDistanceRegistered() < 1.5) {
                     lastBeacon = b;
+                    loadingImage.setVisibility(ImageView.INVISIBLE);
                     textViewAction.setText("Você está próximo a um experimento, a qualquer momento pressione no centro da tela para continuar a navegação.");
                     textViewDesc.setText("Este é o " + b.getDescription());
                     MyApp.getAppTTS().addQueue("" + textViewAction.getText());
@@ -140,6 +146,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             // do your logic for long click and remember to return it
                             MyApp.getAppTTS().initQueue("Buscando experimentos..");
+
                             StartFreeNavigation();
                         }});
 
