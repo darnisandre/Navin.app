@@ -1,5 +1,8 @@
 package navin.tree;
 
+import com.estimote.sdk.Beacon;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import navin.dto.BeaconDTO;
@@ -11,8 +14,10 @@ public class BeaconNode {
     private BeaconDTO beacon;
     List<BeaconRelation> beacons;
 
+
     public BeaconNode (BeaconDTO beacon){
         this.beacon = beacon;
+        beacons = new ArrayList<BeaconRelation>();
     }
 
     public BeaconDTO getBeacon() {

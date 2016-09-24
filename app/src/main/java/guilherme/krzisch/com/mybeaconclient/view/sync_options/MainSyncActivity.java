@@ -25,6 +25,10 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import org.springframework.util.CollectionUtils;
+
+import java.util.Arrays;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
@@ -35,6 +39,7 @@ import navin.dto.BeaconMappingDTO;
 import navin.dto.CategoryDTO;
 import navin.dto.LocationDTO;
 import navin.dto.RouteDTO;
+import navin.tree.BeaconTree;
 
 
 public class MainSyncActivity extends AppCompatActivity {
@@ -206,6 +211,9 @@ public class MainSyncActivity extends AppCompatActivity {
                 LocationDTO l = MyApp.getInternalCache().getLocations(0,0).get(0);
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
                 //CategoryDTO category = MyApp.getInternalCache().getCategories(1).get(0);
+
+                BeaconTree tree = new BeaconTree(mapping);
+                tree.getRoute(Arrays.asList(2l,3l,4l),1l);
 
                 //acho que vamos ter que fazer isso pra toda estrutura
                 MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
