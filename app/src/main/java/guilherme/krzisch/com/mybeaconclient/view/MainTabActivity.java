@@ -29,6 +29,7 @@ import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.add_routes.AddRouteActivity;
 import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
+import guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.TutorialActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
@@ -280,7 +281,21 @@ public class MainTabActivity extends AppCompatActivity {
                     textViewDesc.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
                     List<BeaconDTO> beaconLst = (MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getBeacons());
                     String bodyText = "";
-                    List<CategoryDTO> cLst = MyApp.getCategories();
+
+                    for(BeaconDTO b : beaconLst){
+                        List<CategoryDTO> cLst = b.getCategories();
+                        if(cLst != null) {
+                            for (CategoryDTO c : cLst) {
+                                bodyText += c.getName();
+                                bodyText += "\n";
+                            }
+                        }else{
+                            bodyText += b.getId();
+                            bodyText += "\n";
+                        }
+                    }
+
+/*                    List<CategoryDTO> cLst = MyApp.getCategories();
                     for(CategoryDTO c : cLst){
                         List<BeaconDTO> bLst = c.getBeacons();
                         for(BeaconDTO b : bLst){
@@ -291,9 +306,18 @@ public class MainTabActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                    }
+                    }*/
 
                     textCatLst.setText(bodyText);
+
+                    rootView3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // do your logic for long click and remember to return it
+                            Intent intent = new Intent(baseContext, RouteActivity.class);
+                            startActivity(intent);
+                        }});
+
                     return rootView3;
             }
         }

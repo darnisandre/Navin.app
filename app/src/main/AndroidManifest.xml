@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="guilherme.krzisch.com.mybeaconclient" >
+    package="guilherme.krzisch.com.mybeaconclient">
     // Bluetooth
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -15,10 +15,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".view.old_files.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -30,14 +30,14 @@
         <activity
             android:name=".view.old_files.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.MainTabActivity" >
+            android:parentActivityName=".view.MainTabActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
         <activity
             android:name=".view.sync_options.AboutActivity"
-            android:parentActivityName=".view.MainTabActivity" >
+            android:parentActivityName=".view.MainTabActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
@@ -46,21 +46,21 @@
             android:name=".view.MainTabActivity"
             android:label="@string/title_activity_main_tab"
             android:parentActivityName=".view.MainTabActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
         <activity
             android:name=".view.sync_options.MainSyncActivity"
-            android:label="@string/action_settings" >
+            android:label="@string/action_settings">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.splash_screen.SplashActivity"
-            android:theme="@style/SplashTheme" >
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,17 +68,22 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.testes.CompassActivity" />
-        <activity android:name=".view.free_navigation.FreeNavSearchActivity" >
+        <activity android:name=".view.free_navigation.FreeNavSearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
-        <activity android:name=".view.sync_options.TutorialActivity" >
+        <activity android:name=".view.sync_options.TutorialActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
         </activity>
-        <activity android:name=".view.add_routes.AddRouteActivity" >
+        <activity android:name=".view.add_routes.AddRouteActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+        </activity>
+        <activity android:name=".view.route_navigation.RouteActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
