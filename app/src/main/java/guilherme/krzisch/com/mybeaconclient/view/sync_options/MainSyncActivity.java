@@ -214,6 +214,7 @@ public class MainSyncActivity extends AppCompatActivity {
 
                 BeaconTree tree = new BeaconTree(mapping);
                 tree.getRoute(Arrays.asList(2l,3l,4l),1l);
+                tree.getRouteTspHeuristic(Arrays.asList(2l,3l,4l),1l);
 
                 //acho que vamos ter que fazer isso pra toda estrutura
                 MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
