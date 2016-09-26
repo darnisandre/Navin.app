@@ -22,7 +22,10 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
@@ -282,18 +285,23 @@ public class MainTabActivity extends AppCompatActivity {
                     List<BeaconDTO> beaconLst = (MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getBeacons());
                     String bodyText = "";
 
+                    Set<String> set = new HashSet<String>();
+
                     for(BeaconDTO b : beaconLst){
                         List<CategoryDTO> cLst = b.getCategories();
                         if(cLst != null) {
                             for (CategoryDTO c : cLst) {
-                                bodyText += c.getName();
-                                bodyText += "\n";
+                                set.add(c.getName());
                             }
-                        }else{
-                            bodyText += b.getId();
-                            bodyText += "\n";
                         }
                     }
+
+                    Iterator it = set.iterator();
+                    while(it.hasNext()) {
+                        bodyText += ((String)(it.next()));
+                        bodyText += "\n";
+                    }
+
 
 /*                    List<CategoryDTO> cLst = MyApp.getCategories();
                     for(CategoryDTO c : cLst){
@@ -315,6 +323,9 @@ public class MainTabActivity extends AppCompatActivity {
                         public void onClick(View view) {
                             // do your logic for long click and remember to return it
                             Intent intent = new Intent(baseContext, RouteActivity.class);
+                            Bundle b = new Bundle();
+                            b.putInt("id", Integer.parseInt(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getId().toString())); //Your id
+                            intent.putExtras(b); //Put your id to your next Intent
                             startActivity(intent);
                         }});
 

@@ -204,11 +204,15 @@ public class MainSyncActivity extends AppCompatActivity {
             }
             else if(getLatitude(this.mainSyncActivityView) != 0){
 
+                //-30.05849
+                //-51.17602
+
                 //TODO HERE
                 //depois que tem a localização do GPS, buscar no banco de dados e sincronizar os objetos
                 //mudar o texto do textViewLocal para o nome do local que buscou no banco
                 RouteDTO r = MyApp.getInternalCache().getRoutes(1).get(0);
-                LocationDTO l = MyApp.getInternalCache().getLocations(0,0).get(0);
+                LocationDTO l = MyApp.getInternalCache().getLocations(-30.05849,-51.17602).get(0);
+                //LocationDTO l = MyApp.getInternalCache().getLocations(0,0).get(0);
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
                 //CategoryDTO category = MyApp.getInternalCache().getCategories(1).get(0);
 
@@ -217,13 +221,14 @@ public class MainSyncActivity extends AppCompatActivity {
                 tree.getRouteTspHeuristic(Arrays.asList(2l,3l,4l),1l);
 
                 //acho que vamos ter que fazer isso pra toda estrutura
-                MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
+                MyApp.setLocation(MyApp.getInternalCache().getLocations(-30.05849,-51.17602).get(0));
+                //MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
                 MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 
                 progressBar.setVisibility(View.INVISIBLE);
-                textViewLocal.setText(mapping.getLocation().getDescription());// + "\n" + category.getName());
+                textViewLocal.setText(MyApp.getBeaconMapping().getLocation().getDescription());// + "\n" + category.getName());
                 textViewLocal.setVisibility(View.VISIBLE);
 
                 //voz informando que encontrou a localização
