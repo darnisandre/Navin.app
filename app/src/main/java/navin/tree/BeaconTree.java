@@ -2,6 +2,8 @@ package navin.tree;
 
 import android.util.Log;
 
+import org.springframework.util.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +21,10 @@ import navin.util.Util;
 public class BeaconTree {
     private Map<Long, BeaconNode> nodes;
     private BeaconMappingDTO mapping;
+    private class PathNode{
+        public double value;
+        public List<Long> path;
+    }
 
     public BeaconTree(BeaconMappingDTO mapping) {
         this.mapping = mapping;
@@ -47,21 +53,9 @@ public class BeaconTree {
         return nodes.get(beaconId);
     }
 
-    public List<BeaconNode> getRoute(List<Long> ids, Long startId){
-        long time = System.currentTimeMillis();
-        /*floyd
-        1 let dist be a |V| × |V| array of minimum distances initialized to 8 (infinity)
-                2 for each vertex v
-        3    dist[v][v] ? 0
-        4 for each edge (u,v)
-        5    dist[u][v] ? w(u,v)  // the weight of the edge (u,v)
-        6 for k from 1 to |V|
-                7    for i from 1 to |V|
-                8       for j from 1 to |V|
-                9          if dist[i][j] > dist[i][k] + dist[k][j]
-        10             dist[i][j] ? dist[i][k] + dist[k][j]
-        11         end if*/
 
+    public List<BeaconNode> getRouteTspHeuristic(List<Long> ids, Long startId) {
+        long time = System.nanoTime();
 
         Map<Long,Integer> idToPos = new HashMap<Long,Integer>();
         Map<Integer,Long> posToId = new HashMap<Integer,Long>();
@@ -88,9 +82,10 @@ public class BeaconTree {
             distances[idToPos.get(dto.getBeaconB().getId())][idToPos.get(dto.getBeaconA().getId())] = dto.getDistance();
         }
 
-        for(int i=0; i < nodes.size(); i++){
-            for (int j=0;j<nodes.size();j++){
-                for(int k=0;k<nodes.size();k++){
+
+        for(int k=0; k < nodes.size(); k++){
+            for (int i=0;i<nodes.size();i++){
+                for(int j=0;j<nodes.size();j++){
                     if( distances[i][j] > distances[i][k] + distances[k][j]){
                         distances[i][j] = distances[i][k] + distances[k][j];
                         path[i][j] = path[i][k] + posToId.get(k) + "," + path[k][j];
@@ -99,50 +94,124 @@ public class BeaconTree {
             }
         }
 
-        Aux a = pass(ids,startId,distances,idToPos);
+        Long atual = startId;
+        List<Long> pass = new ArrayList<>(ids);
+        pass.add(atual);
+        List<Long> tspPath = new ArrayList<Long>(ids.size());
+        while(!pass.isEmpty()){
+            Long next = null;
+            Double min = Double.MAX_VALUE;
+            for(Long toPass: pass){
+                Double costToPass = distances[idToPos.get(atual)][idToPos.get(toPass)];
+                if(min > costToPass){
+                    min = costToPass;
+                    next = toPass;
+                }
+            }
+            pass.remove(next);
+            tspPath.add(next);
+            atual = next;
+        }
 
-        for(Long l: a.path){
-            Log.i("Pass",l.toString());
+        String fullPath=tspPath.get(0).toString() + ",";
+        for(int i=1; i < tspPath.size();i++){
+            fullPath += path[idToPos.get(tspPath.get(i-1))][idToPos.get(tspPath.get(i))] + tspPath.get(i) + ",";
+        }
+
+        Log.i("TspHeuristic:FullPath", fullPath);
+        Log.i("TspHeuristic:Tempo",String.valueOf(System.nanoTime()-time));
+
+        List<BeaconNode> beaconsPath = new ArrayList<BeaconNode>();
+        for(String s: fullPath.split(",")){
+            beaconsPath.add(getNode(new Long(s)));
+        }
+        return beaconsPath;
+    }
+
+    public List<BeaconNode> getRoute(List<Long> ids, Long startId){
+        long time = System.nanoTime();
+        Map<Long,Integer> idToPos = new HashMap<Long,Integer>();
+        Map<Integer,Long> posToId = new HashMap<Integer,Long>();
+
+        int pos=0;
+        for(BeaconNode n: nodes.values()){
+            idToPos.put(n.getBeacon().getId(), pos);
+            posToId.put(pos, n.getBeacon().getId());
+            pos++;
+        }
+
+        double[][] distances = new double[nodes.size()][nodes.size()];
+        String[][] path = new String[nodes.size()][nodes.size()];
+        for(int i=0; i < nodes.size(); i++){
+            for (int j=0;j<nodes.size();j++){
+                distances[i][j] = Double.MAX_VALUE;
+                path[i][j] = "";
+                if(i==j) distances[i][j] =0;
+            }
+        }
+
+        for (ConnectionDTO dto : mapping.getConnections()) {
+            distances[idToPos.get(dto.getBeaconA().getId())][idToPos.get(dto.getBeaconB().getId())] = dto.getDistance();
+            distances[idToPos.get(dto.getBeaconB().getId())][idToPos.get(dto.getBeaconA().getId())] = dto.getDistance();
         }
 
 
-        Log.i("BeaconTree","Tempo:" + (System.currentTimeMillis()-time));
+        for(int k=0; k < nodes.size(); k++){
+            for (int i=0;i<nodes.size();i++){
+                for(int j=0;j<nodes.size();j++){
+                    if( distances[i][j] > distances[i][k] + distances[k][j]){
+                        distances[i][j] = distances[i][k] + distances[k][j];
+                        path[i][j] = path[i][k] + posToId.get(k) + "," + path[k][j];
+                    }
+                }
+            }
+        }
 
-        for(BeaconNode n: nodes.values()){
+        PathNode a = pass(ids,startId,distances,idToPos);
+
+        String fullPath=a.path.get(0).toString() + ",";
+        for(int i=1; i < a.path.size();i++){
+            fullPath += path[idToPos.get(a.path.get(i-1))][idToPos.get(a.path.get(i))] + a.path.get(i) + ",";
+        }
+
+        Log.i("getRoute:FullPath", fullPath);
+
+        Log.i("getRoute:Tempo",String.valueOf(System.nanoTime()-time));
+
+        /*for(BeaconNode n: nodes.values()){
             for(BeaconNode node: nodes.values()){
                 Log.i("BeaconTree","De "+ n.getBeacon().getId() + " Ate " + node.getBeacon().getId() + ": " + distances[idToPos.get(n.getBeacon().getId())][idToPos.get(node.getBeacon().getId())]);
                 Log.i("BeaconTree","Path de "+ n.getBeacon().getId() + " Ate " + node.getBeacon().getId() + ": " + n.getBeacon().getId() + "," + path[idToPos.get(n.getBeacon().getId())][idToPos.get(node.getBeacon().getId())] + node.getBeacon().getId()) ;
             }
+        }*/
+
+        List<BeaconNode> beaconsPath = new ArrayList<BeaconNode>();
+        for(String s: fullPath.split(",")){
+            beaconsPath.add(getNode(new Long(s)));
         }
-
-
-        return null;
+        return beaconsPath;
     }
 
-    private class Aux{
-        public double value;
-        public List<Long> path;
-    }
-
-    private Aux pass(List<Long> needPass, Long start, double[][] distances, Map<Long,Integer> idToPos){
+    private PathNode pass(List<Long> needPass, Long start, double[][] distances, Map<Long,Integer> idToPos){
         if(needPass.isEmpty()) {
-            Aux a = new Aux();
+            PathNode a = new PathNode();
             a.value=0;
             a.path = new ArrayList<>();
+            a.path.add(start);
             return a;
         }
-        Aux min = null;
+        PathNode min = null;
         for(Long l : needPass){
             List<Long> list = new ArrayList<>(needPass);
             list.remove(l);
-            Aux val = pass(list,l,distances,idToPos);
+            PathNode val = pass(list,l,distances,idToPos);
             if(min ==null || val.value + distances[idToPos.get(start)][idToPos.get(l)] < min.value ){
                 min = val;
                 //Soma o atual
                 min.value = val.value + distances[idToPos.get(start)][idToPos.get(l)];
-                min.path.add(l);
             }
         }
+        min.path.add(0,start);
         return min;
     }
 

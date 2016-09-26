@@ -212,12 +212,12 @@ public class MainSyncActivity extends AppCompatActivity {
                 BeaconMappingDTO mapping = MyApp.getInternalCache().getBeaconMapping(1);
                 //CategoryDTO category = MyApp.getInternalCache().getCategories(1).get(0);
 
-                /*BeaconTree tree = new BeaconTree(mapping);
-                tree.getRoute(Arrays.asList(2l,3l,4l),1l);*/
+                BeaconTree tree = new BeaconTree(mapping);
+                tree.getRoute(Arrays.asList(2l,3l,4l),1l);
+                tree.getRouteTspHeuristic(Arrays.asList(2l,3l,4l),1l);
 
                 //acho que vamos ter que fazer isso pra toda estrutura
-                MyApp.setLocation(MyApp.getInternalCache().getLocations(-30.0584900, -51.1760200).get(0)); //from museu
-                //MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0)); //from testes
+                MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
                 MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
