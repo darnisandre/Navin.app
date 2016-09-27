@@ -6,9 +6,11 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
@@ -215,4 +217,101 @@ public class BeaconTree {
         return min;
     }
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private class State {
+        public Long atual;
+        public String path;
+        public double percorrido;
+        public boolean[] passed;
+    }
+
+    public List<BeaconNode> getRouteA(List<Long> ids, Long startId) {
+        long time = System.nanoTime();
+        PriorityQueue<State> temp = new PriorityQueue<State>(10, new Comparator<State>() {
+            @Override
+            public int compare(State o1, State o2) {
+                // TODO Auto-generated method stub
+                return  new Double(( o1.percorrido) - ( o2.percorrido)).intValue();
+            }
+        });
+
+        Map<Long,Integer> idToPos = new HashMap<Long,Integer>();
+        int pos =0;
+        for(Long n: ids){
+            idToPos.put(n, pos);
+            pos++;
+        }
+
+        State init = new State();
+        init.path=String.valueOf(startId);
+        init.atual = startId;
+        init.percorrido=0;
+        init.passed = new boolean[ids.size()];
+        temp.add(init);
+
+        State result = null;
+        while (!temp.isEmpty()) {
+            //Current state
+            State current = temp.poll();
+
+            for (BeaconRelation r : getNode(current.atual).getBeacons()){
+                State next = new State();
+                next.atual = r.getBeacon().getBeacon().getId();
+                next.path = current.path + "," + r.getBeacon().getBeacon().getId();
+                next.percorrido = current.percorrido + r.getDistance();
+                next.passed = current.passed.clone();
+                if(idToPos.get(r.getBeacon().getBeacon().getId())!=null){
+                    next.passed[idToPos.get(r.getBeacon().getBeacon().getId())] = true;
+                    boolean finish = true;
+                    for(boolean b: next.passed){
+                        if(!b){
+                           finish=false;
+                            break;
+                        }
+                    }
+                    if(finish){
+                        result = next;
+                        //FINISH
+                        temp.clear();
+                        break;
+                    }
+                }
+                temp.add(next);
+            }
+        }
+
+
+        Log.i("A*:Path",result.path);
+        Log.i("A*:Tempo",String.valueOf(System.nanoTime()-time));
+
+        List<BeaconNode> beaconsPath = new ArrayList<BeaconNode>();
+        for(String s: result.path.split(",")){
+            beaconsPath.add(getNode(new Long(s)));
+        }
+        return beaconsPath;
+    }
+
+
+
+
+
+
+
+    }
