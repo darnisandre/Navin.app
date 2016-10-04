@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/listViewRoutes"
         android:layout_below="@+id/textView4"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/textView5" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,4 +24,14 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:lines="3" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView5"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:lines="2"
+        android:visibility="invisible" />
 </RelativeLayout>
