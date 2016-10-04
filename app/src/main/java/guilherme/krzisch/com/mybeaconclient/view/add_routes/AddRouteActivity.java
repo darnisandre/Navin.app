@@ -1,6 +1,7 @@
 package guilherme.krzisch.com.mybeaconclient.view.add_routes;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -42,11 +44,28 @@ public class AddRouteActivity extends AppCompatActivity {
 
         List<String> values = new ArrayList<String>();
         for(CategoryDTO b : categories){
-            values.add(b.getName() + " - " + b.getDescription());
+            values.add(b.getName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice, values);
+                android.R.layout.simple_list_item_multiple_choice, values){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#eef9f9"));
+                }
+                else
+                {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(Color.parseColor("#bde9e7"));
+                }
+                return view;
+            }
+        };
 
         // Assign adapter to ListView
         listView.setAdapter(adapter);

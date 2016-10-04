@@ -2,6 +2,7 @@ package guilherme.krzisch.com.mybeaconclient.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -33,12 +38,14 @@ import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.add_routes.AddRouteActivity;
 import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
 import guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteActivity;
+import guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteMainActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.TutorialActivity;
 import guilherme.krzisch.com.mybeaconclient.view.util.DepthPageTransformer;
 import guilherme.krzisch.com.mybeaconclient.view.util.SlidingTabLayout;
 import navin.dto.BeaconDTO;
 import navin.dto.CategoryDTO;
+import navin.dto.RouteDTO;
 
 public class MainTabActivity extends AppCompatActivity {
 
@@ -180,7 +187,8 @@ public class MainTabActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return  MyApp.getRoutes().size() + 2;
+            return 3;
+            //return  MyApp.getRoutes().size() + 2;
         }
 
         @Override
@@ -192,7 +200,8 @@ public class MainTabActivity extends AppCompatActivity {
                case 1:
                    return "Navegar sem rota";
                default:
-                   return MyApp.getRoutes().get(position-2).getName();
+                   return "Rotas";
+                   //return MyApp.getRoutes().get(position-2).getName();
             }
         }
     }
@@ -275,17 +284,87 @@ public class MainTabActivity extends AppCompatActivity {
                             startActivity(intent);
                             }});
                     return rootView2;
+                case 3:
+                    View rootView4 = inflater.inflate(R.layout.fragment_route_tab, container, false);
+
+                    ListView listView;
+                    final List<RouteDTO> routes;
+
+                    // Get ListView object from xml
+                    listView = (ListView) rootView4.findViewById(R.id.listViewRoutes);
+
+                    routes = MyApp.getRoutes();
+
+                    List<String> values = new ArrayList<String>();
+                    for(RouteDTO b : routes){
+                        values.add(b.getName());
+                    }
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(rootView4.getContext(),
+                            android.R.layout.simple_list_item_1, values){
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent){
+                            // Get the current item from ListView
+                            View view = super.getView(position,convertView,parent);
+                            if(position %2 == 1)
+                            {
+                                // Set a background color for ListView regular row/item
+                                view.setBackgroundColor(Color.parseColor("#eef9f9"));
+                            }
+                            else
+                            {
+                                // Set the background color for alternate row/item
+                                view.setBackgroundColor(Color.parseColor("#bde9e7"));
+                            }
+                            return view;
+                        }
+                    };
+
+
+                    // Assign adapter to ListView
+                    listView.setAdapter(adapter);
+
+
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            //Capturando o objeto associado ao item da lista
+                            String objetoExemplo = (String) adapterView.getAdapter().getItem(position);
+                            int intExemplo = -1;
+                            for(RouteDTO r : routes){
+                                if(r.getName().equals(objetoExemplo)){
+                                    intExemplo = Integer.parseInt(r.getId().toString());
+                                }
+                            }
+
+                            boolean booleanExemplo = true;
+
+                            Intent intent = new Intent(baseContext, RouteMainActivity.class);
+
+                            //O primeiro parametro é o nome deste extra a ser capturado na sua outra Activity
+                            intent.putExtra("id", intExemplo);
+                            startActivity(intent);
+
+                        }
+                    });
+
+                    return rootView4;
                 default:
+                    return null;
+                    /*
                     View rootView3 = inflater.inflate(R.layout.fragment_category_tab, container, false);
                     TextView textViewDesc = (TextView) rootView3.findViewById(R.id.textViewDesc);
                     TextView textTitle = (TextView) rootView3.findViewById(R.id.textViewTitle);
-                    TextView textCatLst = (TextView) rootView3.findViewById(R.id.textViewCat);
+                    //TextView textCatLst = (TextView) rootView3.findViewById(R.id.textViewCat);
                     textTitle.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getName());
                     textViewDesc.setText(MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getDescription());
-                    List<BeaconDTO> beaconLst = (MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getBeacons());
-                    String bodyText = "";
 
-                    Set<String> set = new HashSet<String>();
+                    //Essa parte era pra mostrar as categorias, mas não vai ter mais
+                    //List<BeaconDTO> beaconLst = (MyApp.getRoutes().get(getArguments().getInt(ARG_SECTION_NUMBER)-3).getBeacons());
+                    //String bodyText = "";
+
+                    *//*Set<String> set = new HashSet<String>();
 
                     for(BeaconDTO b : beaconLst){
                         List<CategoryDTO> cLst = b.getCategories();
@@ -300,23 +379,9 @@ public class MainTabActivity extends AppCompatActivity {
                     while(it.hasNext()) {
                         bodyText += ((String)(it.next()));
                         bodyText += "\n";
-                    }
+                    }*//*
 
-
-/*                    List<CategoryDTO> cLst = MyApp.getCategories();
-                    for(CategoryDTO c : cLst){
-                        List<BeaconDTO> bLst = c.getBeacons();
-                        for(BeaconDTO b : bLst){
-                            for(BeaconDTO br : beaconLst){
-                                if(b.getId().toString().equals(br.getId().toString())){
-                                    bodyText += c.getName();
-                                    bodyText += "\n";
-                                }
-                            }
-                        }
-                    }*/
-
-                    textCatLst.setText(bodyText);
+                    *//*textCatLst.setText(bodyText);*//*
 
                     rootView3.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -329,7 +394,7 @@ public class MainTabActivity extends AppCompatActivity {
                             startActivity(intent);
                         }});
 
-                    return rootView3;
+                    return rootView3;*/
             }
         }
     }

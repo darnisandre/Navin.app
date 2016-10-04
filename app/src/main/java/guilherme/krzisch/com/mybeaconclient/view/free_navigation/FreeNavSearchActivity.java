@@ -136,8 +136,8 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                 if (bObj.getLastDistanceRegistered() < 1.5) {
                     lastBeacon = b;
                     loadingImage.setVisibility(ImageView.INVISIBLE);
-                    textViewAction.setText("Você está próximo a um experimento, a qualquer momento pressione no centro da tela para continuar a navegação.");
-                    textViewDesc.setText("Este é o " + b.getDescription());
+                    textViewAction.setText("Você está próximo a um beacon, a qualquer momento pressione no centro da tela para continuar a navegação.");
+                    textViewDesc.setText(b.getDescription());
                     MyApp.getAppTTS().addQueue("" + textViewAction.getText());
                     MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
