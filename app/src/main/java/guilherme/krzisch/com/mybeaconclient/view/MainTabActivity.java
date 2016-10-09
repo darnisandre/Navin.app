@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ import java.util.Set;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.add_routes.AddRouteActivity;
 import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
 import guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteActivity;
@@ -107,6 +109,9 @@ public class MainTabActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        //inicia o monitoramento
+        MyBeaconFacade.startMyBeaconsManagerOperation();
     }
 
     @Override

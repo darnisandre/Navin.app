@@ -27,14 +27,19 @@ import android.widget.TextView;
 
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.BeaconObject;
+import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.testes.CompassActivity;
 import guilherme.krzisch.com.mybeaconclient.view.MainTabActivity;
+import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
 import navin.dto.CategoryDTO;
 import navin.dto.LocationDTO;
@@ -228,6 +233,20 @@ public class MainSyncActivity extends AppCompatActivity {
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 
+                //TODO HERE adiciona os beacons no framework e inicia monitoramento
+                BeaconMappingDTO mapping = MyApp.getBeaconMapping();
+                List<BeaconDTO> bLst = mapping.getBeacons();
+
+                ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
+
+                //adiciona todos eles no framework
+                for (BeaconDTO b: bLst) {
+                    BeaconObject a = new BeaconObject(String.valueOf(b.getId()), b.getUuid(),
+                            Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), 0, "", 0,0);
+                    ar.add(a);
+                }
+                MyBeaconFacade.addBeaconsLocally(ar);
+
                 progressBar.setVisibility(View.INVISIBLE);
                 textViewLocal.setText(MyApp.getBeaconMapping().getLocation().getDescription());// + "\n" + category.getName());
                 textViewLocal.setVisibility(View.VISIBLE);
@@ -350,7 +369,6 @@ public class MainSyncActivity extends AppCompatActivity {
         Log.i("RESUME", "RESUME");
         refresh();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

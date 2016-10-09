@@ -31,7 +31,6 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
     @InjectView(R.id.FreeNavSearchActivityView) View FreeNavSearchActivityView;
     ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
-    Thread t = new Thread();
     BeaconDTO lastBeacon = null;
 
     @Override
@@ -50,7 +49,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
         FreeNavSearchActivityView.setOnClickListener(null);
 
-        //busca todos beacons da configuração ativa
+        /*//busca todos beacons da configuração ativa
         BeaconMappingDTO mapping = MyApp.getBeaconMapping();
         List<BeaconDTO> bLst = mapping.getBeacons();
 
@@ -65,7 +64,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         MyBeaconFacade.addBeaconsLocally(ar);
 
         //inicia o monitoramento
-        MyBeaconFacade.startMyBeaconsManagerOperation();
+        MyBeaconFacade.startMyBeaconsManagerOperation();*/
 
         //inicia thread
         StartFreeNavigation();
@@ -97,7 +96,8 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                 for(BeaconDTO b : lst){
                     if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
-                        if (bObj.getLastDistanceRegistered() < 1.5) {
+                        //TODO HERE verificar se é um ponto final pelo tipo do beacon para não pegar os beacons auxilixares
+                        if (bObj.getLastDistanceRegistered() < 1.5) { // && BEACONTYPE == object
                             lastBeacon = b;
                             Log.i("FOUND", bObj.getRemoteId());
                             myHandler.post(myRunnable);
@@ -149,8 +149,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        t.interrupt();
-        MyBeaconFacade.stopMyBeaconsManagerOperation();
+        //MyBeaconFacade.stopMyBeaconsManagerOperation();
         MyApp.getAppTTS().initQueue("");
     }
 }
