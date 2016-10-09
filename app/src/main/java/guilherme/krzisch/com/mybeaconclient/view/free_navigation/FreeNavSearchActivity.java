@@ -1,5 +1,7 @@
 package guilherme.krzisch.com.mybeaconclient.view.free_navigation;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,6 +72,8 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
     }
 
+    final Handler myHandler = new Handler();
+
     private void StartFreeNavigation() {
 
         FreeNavSearchActivityView.setOnClickListener(null);
@@ -81,15 +85,13 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
+
+
         Timer timer= new Timer();
-        final FreeNavSearchActivity that = this;
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
 
-                TextView textViewAction = (TextView) that.findViewById(R.id.textViewAction);
-                TextView textViewDesc = (TextView) that.findViewById(R.id.textViewDesc);
-                ProgressBar loadingImage = (ProgressBar) that.findViewById(R.id.progressBarLoading);
                 List<BeaconDTO> lst = MyApp.getBeaconMapping().getBeacons();
 
                 for(BeaconDTO b : lst){
@@ -97,22 +99,10 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
                         if (bObj.getLastDistanceRegistered() < 1.5) {
                             lastBeacon = b;
-                            loadingImage.setVisibility(ImageView.INVISIBLE);
-                            textViewAction.setText("Você está próximo a um beacon, a qualquer momento pressione no centro da tela para continuar a navegação.");
-                            textViewDesc.setText(b.getDescription());
-                            MyApp.getAppTTS().addQueue("" + textViewAction.getText());
-                            MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
-
-                            FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    // do your logic for long click and remember to return it
-                                    MyApp.getAppTTS().initQueue("Buscando experimentos..");
-
-                                    StartFreeNavigation();
-                                }});
-
-                            StopFreeNavigation();
+                            Log.i("FOUND", bObj.getRemoteId());
+                            myHandler.post(myRunnable);
+                            //StopFreeNavigation();
+                            this.cancel();
                             return;
                         }
                     }
@@ -122,36 +112,32 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
             }
         },0,1000);
+    }
 
-       /* t = new Thread() {
+    final Runnable myRunnable = new Runnable() {
+        public void run() {
 
+            TextView textViewAction = (TextView) FreeNavSearchActivityView.findViewById(R.id.textViewAction);
+            TextView textViewDesc = (TextView) FreeNavSearchActivityView.findViewById(R.id.textViewDesc);
+            ProgressBar loadingImage = (ProgressBar) FreeNavSearchActivityView.findViewById(R.id.progressBarLoading);
+
+            loadingImage.setVisibility(ImageView.INVISIBLE);
+            textViewAction.setText("Você está próximo a um beacon, a qualquer momento pressione no centro da tela para continuar a navegação.");
+            textViewDesc.setText(lastBeacon.getDescription());
+            MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+            MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
+
+            FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                try {
-                    while (!isInterrupted()) {
-                        Thread.sleep(1000);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.i("Thread", "Count " + Thread.activeCount());
-                                verifyIfHasProximity();
-                            }
-                        });
-                    }
-                } catch (InterruptedException e) {
-                    Log.i("Thread", "Interrupted");
-                }
-            }
-        };
+            public void onClick(View view) {
+            // do your logic for long click and remember to return it
+                MyApp.getAppTTS().initQueue("Buscando experimentos..");
 
-        Log.i("Thread", "Started");
-        t.start();*/
-    }
+                StartFreeNavigation();
+            }});
+        }
+    };
 
-    private void StopFreeNavigation() {
-        Log.i("Thread", "Stoped");
-        t.interrupt();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -166,41 +152,5 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         t.interrupt();
         MyBeaconFacade.stopMyBeaconsManagerOperation();
         MyApp.getAppTTS().initQueue("");
-    }
-
-    public void verifyIfHasProximity(){
-        TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
-        TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
-        ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
-        List<BeaconDTO> lst = MyApp.getBeaconMapping().getBeacons();
-
-        for(BeaconDTO b : lst){
-            if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
-                BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
-                if (bObj.getLastDistanceRegistered() < 1.5) {
-                    lastBeacon = b;
-                    loadingImage.setVisibility(ImageView.INVISIBLE);
-                    textViewAction.setText("Você está próximo a um beacon, a qualquer momento pressione no centro da tela para continuar a navegação.");
-                    textViewDesc.setText(b.getDescription());
-                    MyApp.getAppTTS().addQueue("" + textViewAction.getText());
-                    MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
-
-                    FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // do your logic for long click and remember to return it
-                            MyApp.getAppTTS().initQueue("Buscando experimentos..");
-
-                            StartFreeNavigation();
-                        }});
-
-                    StopFreeNavigation();
-                    return;
-                }
-            }
-        }
-        StopFreeNavigation();
-        StartFreeNavigation();
-        return;
     }
 }
