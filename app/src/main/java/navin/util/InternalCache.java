@@ -88,15 +88,17 @@ public class InternalCache {
 
     public List<LocationDTO> getLocations(final double lat, double longitude) {
         List<LocationDTO> locations= restClient.getLocations(lat, longitude);
-        HashMap<Long,LocationDTO> cacheLocations = getCacheLocations();
-        for(LocationDTO l : locations){
-            LocationDTO cacheLocation = cacheLocations.get(l.getId());
-            if(cacheLocation != null && l.getLastUpdated().after(cacheLocation.getLastUpdated())){
-                cleanCacheLocation(l.getId());
+        if(locations!=null){
+            HashMap<Long,LocationDTO> cacheLocations = getCacheLocations();
+            for(LocationDTO l : locations){
+                LocationDTO cacheLocation = cacheLocations.get(l.getId());
+                if(cacheLocation != null && l.getLastUpdated().after(cacheLocation.getLastUpdated())){
+                    cleanCacheLocation(l.getId());
+                }
+                cacheLocations.put(l.getId(),l);
             }
-            cacheLocations.put(l.getId(),l);
+            storeCacheLocations(cacheLocations);
         }
-        storeCacheLocations(cacheLocations);
         return locations;
     }
 

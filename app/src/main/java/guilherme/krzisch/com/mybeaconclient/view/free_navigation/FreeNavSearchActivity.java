@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -79,7 +81,49 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
-        t = new Thread() {
+        Timer timer= new Timer();
+        final FreeNavSearchActivity that = this;
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+
+                TextView textViewAction = (TextView) that.findViewById(R.id.textViewAction);
+                TextView textViewDesc = (TextView) that.findViewById(R.id.textViewDesc);
+                ProgressBar loadingImage = (ProgressBar) that.findViewById(R.id.progressBarLoading);
+                List<BeaconDTO> lst = MyApp.getBeaconMapping().getBeacons();
+
+                for(BeaconDTO b : lst){
+                    if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
+                        BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
+                        if (bObj.getLastDistanceRegistered() < 1.5) {
+                            lastBeacon = b;
+                            loadingImage.setVisibility(ImageView.INVISIBLE);
+                            textViewAction.setText("Você está próximo a um beacon, a qualquer momento pressione no centro da tela para continuar a navegação.");
+                            textViewDesc.setText(b.getDescription());
+                            MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                            MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
+
+                            FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // do your logic for long click and remember to return it
+                                    MyApp.getAppTTS().initQueue("Buscando experimentos..");
+
+                                    StartFreeNavigation();
+                                }});
+
+                            StopFreeNavigation();
+                            return;
+                        }
+                    }
+                }
+
+
+
+            }
+        },0,1000);
+
+       /* t = new Thread() {
 
             @Override
             public void run() {
@@ -101,7 +145,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         };
 
         Log.i("Thread", "Started");
-        t.start();
+        t.start();*/
     }
 
     private void StopFreeNavigation() {

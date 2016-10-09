@@ -1,6 +1,7 @@
 package navin.util;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.springframework.web.client.RestTemplate;
 
@@ -24,30 +25,40 @@ public class RestClient {
         restTemplate.getMessageConverters().add(new CustomGsonHttpMessageConverter());
         this.restUrl = restUrl;
     }
+
+    private <T> T getForObject(String url, Class<T> responseType, Object... urlVariables){
+        try {
+            return restTemplate.getForObject(url, responseType, urlVariables);
+        }catch (Exception e){
+            Log.e("RestClient","Problema de conexão",e);
+            return null;
+        }
+    }
+
     public List<RouteDTO> getRoutes(final int locationId){
         final String url = restUrl + "route/location/{id}";
-        RouteDTO[] routes = restTemplate.getForObject(url, RouteDTO[].class,locationId);
-        return Arrays.asList(routes);
+        RouteDTO[] routes = getForObject(url, RouteDTO[].class,locationId);
+        return Util.asList(routes);
     }
     public RouteDTO getRoute(final int id){
         final String url = restUrl + "route/{id}";
-        RouteDTO route = restTemplate.getForObject(url, RouteDTO.class,id);
+        RouteDTO route = getForObject(url, RouteDTO.class,id);
         return route;
     }
     public List<CategoryDTO> getCategories(final int locationId){
         final String url = restUrl + "category/location/{id}";
-        CategoryDTO[] categories= restTemplate.getForObject(url, CategoryDTO[].class,locationId);
+        CategoryDTO[] categories= getForObject(url, CategoryDTO[].class,locationId);
         return Arrays.asList(categories);
     }
     public BeaconMappingDTO getBeaconMapping(final int locationId){
         final String url = restUrl + "beacon/location/{id}";
-        BeaconMappingDTO beaconMapping = restTemplate.getForObject(url, BeaconMappingDTO.class,locationId);
+        BeaconMappingDTO beaconMapping = getForObject(url, BeaconMappingDTO.class,locationId);
         return beaconMapping;
     }
 
     public List<LocationDTO> getLocations(final double lat, double longitude){
         final String url = restUrl + "location/{lat}/{long}";
-        LocationDTO[] locations = restTemplate.getForObject(url, LocationDTO[].class,lat,longitude);
-        return Arrays.asList(locations);
+        LocationDTO[] locations = getForObject(url, LocationDTO[].class,lat,longitude);
+        return Util.asList(locations);
     }
 }
