@@ -110,8 +110,6 @@ public class MainTabActivity extends AppCompatActivity {
             }
         });
 
-        //inicia o monitoramento
-        MyBeaconFacade.startMyBeaconsManagerOperation();
     }
 
     @Override
@@ -151,6 +149,7 @@ public class MainTabActivity extends AppCompatActivity {
 
     private void clearRoutes(){
         //TODO recarregar rotas do servidor
+        MyApp.getAppTTS().addQueue("Rotas personalizadas removidas!");
         Toast.makeText(getBaseContext(), "Rotas personalizadas removidas!", Toast.LENGTH_LONG).show();
         MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
         MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));

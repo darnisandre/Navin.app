@@ -37,6 +37,7 @@ public class RouteActivity extends AppCompatActivity {
     BeaconTree tree = null;
     List<BeaconDTO> bLst = new ArrayList<BeaconDTO>();
     List<Long> idLst = new ArrayList<Long>();
+    Timer timer= new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +145,7 @@ public class RouteActivity extends AppCompatActivity {
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
-        Timer timer= new Timer();
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -154,13 +155,14 @@ public class RouteActivity extends AppCompatActivity {
                 for(BeaconDTO b : lst){
                     if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
-                        if (bObj.getLastDistanceRegistered() < 1.5) {
-                            Log.i("ROTA","FIRST");
+                        Log.i("UUID","Distance: " + bObj.getLastDistanceRegistered() + " ID: " + bObj.getRemoteId());
+                        if (bObj.getLastDistanceRegistered() < 3) {
+                            Log.i("ROTA","inciando rota");
                             lastBeacon = b;
                             rotaCalculada = tree.getRoute(idLst, b.getId());
                             rotaCalculada.remove(0);
-                            rotaCalculada.remove(0);
-                            Log.i("FOUND", bObj.getRemoteId());
+                            idLst.remove(b.getId());
+                            Log.i("UUID","ID encontrado: " + bObj.getRemoteId() + " Distance: " + bObj.getLastDistanceRegistered());
                             myHandler.post(routeOk);
                             //StopFreeNavigation();
                             this.cancel();
@@ -187,7 +189,7 @@ public class RouteActivity extends AppCompatActivity {
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
-        Timer timer= new Timer();
+
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -197,24 +199,39 @@ public class RouteActivity extends AppCompatActivity {
                 for(BeaconDTO b : lst){
                     if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
-                        if (bObj.getLastDistanceRegistered() < 1.5) {
+                        Log.i("UUID","Distance: " + bObj.getLastDistanceRegistered() + " ID: " + bObj.getRemoteId());
+                        if (bObj.getLastDistanceRegistered() < 3) {
                             BeaconNode b2 = rotaCalculada.get(0);
-                            Log.i("UUDI",b2.getBeacon().getId().toString());
-                            Log.i("UUDI",b.getId().toString());
+                            Log.i("UUID","ID esperado: " + b2.getBeacon().getId().toString());
+                            Log.i("UUID","ID encontrado: " + bObj.getRemoteId() + " Distance: " + bObj.getLastDistanceRegistered());
                             if(b2.getBeacon().getId() == b.getId()){
                                 //estou no caminho certo
-                                if(rotaCalculada.size() > 0) rotaCalculada.remove(0);
                                 lastBeacon = b;
-                                Log.i("ROTA","CERTO");
+                                Log.i("ROTA","continuando rota");
+                                if(rotaCalculada.size() > 0) rotaCalculada.remove(0);
+                                //remove o id para não passar de novo nesse ponto (como destino, auxiliar ainda pode passar)
+                                if(idLst.size() > 0) idLst.remove(b.getId());
                                 myHandler.post(routeOk);
                                 //getNextBeacon();
                             }
                             else{
-                                //recalcular a rota
-                                lastBeacon = b;
-                                Log.i("ROTA","RECALCULADO");
+                                //TODO HERE verificar se o ponto é um OBJECT e está na rota (mesmo não sendo o próximo)
+                                //então mostrar informações e remover ponto da lista.
+                                //estou no caminho ~~certo~~
+                                /*lastBeacon = b;
+                                Log.i("ROTA","continuando rota");
                                 rotaCalculada = tree.getRoute(idLst, b.getId());
                                 if(rotaCalculada.size() > 0) rotaCalculada.remove(0);
+                                if(idLst.size() > 0) idLst.remove(b.getId());
+                                myHandler.post(routeOk);*/
+
+                                //senão
+                                //recalcular a rota
+                                lastBeacon = b;
+                                Log.i("ROTA","recalculando rota");
+                                rotaCalculada = tree.getRoute(idLst, b.getId());
+                                if(rotaCalculada.size() > 0) rotaCalculada.remove(0);
+                                if(idLst.size() > 0) idLst.remove(b.getId());
                                 myHandler.post(recalculateRoute);
                             }
 
@@ -243,7 +260,7 @@ public class RouteActivity extends AppCompatActivity {
 
             //TODO HERE verificar se acabou a rota
             if (rotaCalculada.size() == 0) {
-                textViewAction.setText("Você ao seu destino final, ponto: " + lastBeacon.getId());
+                textViewAction.setText("Você chegou ao seu destino final\nPonto: " + lastBeacon.getId());
                 textViewDesc.setText(lastBeacon.getDescription());
             }
             else
@@ -252,7 +269,7 @@ public class RouteActivity extends AppCompatActivity {
 
                 String withHeuristic = "Rota: \n";
                 for (BeaconNode bn : rotaCalculada) {
-                    withHeuristic += bn.getBeacon().getId() + " > ";
+                    withHeuristic += bn.getBeacon().getId() + ", ";
                 }
 
                 //TODO HERE verificar se é um ponto final pelo tipo do beacon
@@ -288,26 +305,35 @@ public class RouteActivity extends AppCompatActivity {
             ProgressBar loadingImage = (ProgressBar) findViewById(R.id.progressBarLoading);
 
             loadingImage.setVisibility(ImageView.INVISIBLE);
-            textViewAction.setText("Você chegou ao ponto " + lastBeacon.getId() + " que não está na sua rota. Estamos recalculando sua rota.");
 
-            String withHeuristic = "Nova Rota: \n";
-            for (BeaconNode bn : rotaCalculada) {
-                withHeuristic += bn.getBeacon().getId() + " > ";
+            if (rotaCalculada.size() == 0) {
+                textViewAction.setText("Você já passou por todos pontos de sua rota! Volte à página inicial para ver outras opções.");
+                //textViewDesc.setText(lastBeacon.getDescription());
             }
+            else {
 
-            textViewDesc.setText(withHeuristic);
-            MyApp.getAppTTS().addQueue("" + textViewAction.getText());
-            MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
+                textViewAction.setText("Você chegou ao ponto " + lastBeacon.getId() + " que não é o próximo destino da sua rota. Estamos recalculando sua rota.");
 
-            View rootView = findViewById(R.id.RouteActivityView);
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // do your logic for long click and remember to return it
-                    MyApp.getAppTTS().initQueue("Buscando..");
+                String withHeuristic = "Nova Rota: \n";
+                for (BeaconNode bn : rotaCalculada) {
+                    withHeuristic += bn.getBeacon().getId() + ", ";
+                }
 
-                    if(rotaCalculada.size() > 0) getNextBeacon();
-                }});
+                textViewDesc.setText(withHeuristic);
+                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
+
+                View rootView = findViewById(R.id.RouteActivityView);
+                rootView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // do your logic for long click and remember to return it
+                        MyApp.getAppTTS().initQueue("Buscando..");
+
+                        if (rotaCalculada.size() > 0) getNextBeacon();
+                    }
+                });
+            }
         }
     };
 
@@ -321,6 +347,7 @@ public class RouteActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        timer.cancel();
         //MyBeaconFacade.stopMyBeaconsManagerOperation();
         MyApp.getAppTTS().initQueue("");
     }

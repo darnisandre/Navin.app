@@ -45,7 +45,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         MyApp.getAppTTS().initQueue("Ande pelo local..");
-        MyApp.getAppTTS().addQueue("Assim que for identificado um experimento você será notificado.");
+        MyApp.getAppTTS().addQueue("Assim que for identificado um beacon você será notificado.");
 
         FreeNavSearchActivityView.setOnClickListener(null);
 
@@ -97,9 +97,10 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                     if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
                         //TODO HERE verificar se é um ponto final pelo tipo do beacon para não pegar os beacons auxilixares
-                        if (bObj.getLastDistanceRegistered() < 1.5) { // && BEACONTYPE == object
+                        //essa porra tem que ser tipada
+                        if (bObj.getLastDistanceRegistered() < 3){// && b.getType().getDescription().equals("OBJECT_TYPE")) {
                             lastBeacon = b;
-                            Log.i("FOUND", bObj.getRemoteId());
+                            Log.i("FOUND", bObj.getRemoteId() + " Distance: " + bObj.getLastDistanceRegistered());
                             myHandler.post(myRunnable);
                             //StopFreeNavigation();
                             this.cancel();
@@ -131,7 +132,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
             // do your logic for long click and remember to return it
-                MyApp.getAppTTS().initQueue("Buscando experimentos..");
+                MyApp.getAppTTS().initQueue("Buscando beacons..");
 
                 StartFreeNavigation();
             }});

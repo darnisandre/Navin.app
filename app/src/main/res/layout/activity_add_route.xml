@@ -38,7 +38,8 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:layout_below="@+id/textView2"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/textView2" />
+        android:layout_alignEnd="@+id/textView2"
+        android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -49,6 +50,7 @@
         android:layout_below="@+id/editTextName"
         android:layout_alignEnd="@+id/editTextName"
         android:layout_alignStart="@+id/editTextName"
-        android:hint="Descrição da Rota" />
+        android:hint="Descrição da Rota"
+        android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
 
 </RelativeLayout>

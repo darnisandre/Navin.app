@@ -247,6 +247,9 @@ public class MainSyncActivity extends AppCompatActivity {
                 }
                 MyBeaconFacade.addBeaconsLocally(ar);
 
+                //inicia o monitoramento
+                MyBeaconFacade.startMyBeaconsManagerOperation();
+
                 progressBar.setVisibility(View.INVISIBLE);
                 textViewLocal.setText(MyApp.getBeaconMapping().getLocation().getDescription());// + "\n" + category.getName());
                 textViewLocal.setVisibility(View.VISIBLE);
