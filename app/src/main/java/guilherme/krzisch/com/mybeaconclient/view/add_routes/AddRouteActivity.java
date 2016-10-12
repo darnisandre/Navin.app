@@ -149,17 +149,13 @@ public class AddRouteActivity extends AppCompatActivity {
             newValues.add(newRoute);
             MyApp.setRoutes(newValues);
 
-            //TODO salvar rotas na cache
             MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
-
-            MyApp.getAppTTS().addQueue("Rota adicionada com sucesso!");
             Toast.makeText(getBaseContext(), "Rota adicionada com sucesso!", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
             startActivity(intent);
             finish();
         }else{
-            MyApp.getAppTTS().addQueue("É necessário selecionar pelo menos uma categoria!");
             Toast.makeText(getBaseContext(), "É necessário selecionar pelo menos uma categoria!", Toast.LENGTH_LONG).show();
         }
 

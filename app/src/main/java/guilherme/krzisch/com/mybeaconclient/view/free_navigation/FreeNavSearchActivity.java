@@ -80,6 +80,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
+        MyApp.getAppTTS().initQueue("Buscando..");
         textViewAction.setText("Buscando..");
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
@@ -118,6 +119,8 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     final Runnable myRunnable = new Runnable() {
         public void run() {
 
+            MyApp.getAppTTS().addQueue("Encontrado");
+
             TextView textViewAction = (TextView) FreeNavSearchActivityView.findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) FreeNavSearchActivityView.findViewById(R.id.textViewDesc);
             ProgressBar loadingImage = (ProgressBar) FreeNavSearchActivityView.findViewById(R.id.progressBarLoading);
@@ -125,15 +128,11 @@ public class FreeNavSearchActivity extends AppCompatActivity {
             loadingImage.setVisibility(ImageView.INVISIBLE);
             textViewAction.setText("Você está próximo a um beacon, a qualquer momento pressione no centro da tela para continuar a navegação.");
             textViewDesc.setText(lastBeacon.getDescription());
-            MyApp.getAppTTS().addQueue("" + textViewAction.getText());
-            MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
             FreeNavSearchActivityView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
             // do your logic for long click and remember to return it
-                MyApp.getAppTTS().initQueue("Buscando beacons..");
-
                 StartFreeNavigation();
             }});
         }
