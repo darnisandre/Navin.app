@@ -33,6 +33,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     @InjectView(R.id.FreeNavSearchActivityView) View FreeNavSearchActivityView;
     ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
     BeaconDTO lastBeacon = null;
+    Timer timer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +78,6 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
-
-
-        Timer timer= new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -140,6 +138,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         //MyBeaconFacade.stopMyBeaconsManagerOperation();
+        timer.cancel();
         MyApp.getAppTTS().initQueue("");
     }
 }
