@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -60,9 +61,9 @@ public class RouteMainActivity extends AppCompatActivity {
                 textTitle.setText(route.getName());
                 textViewDesc.setText(route.getDescription());
 
-                View rootView = this.findViewById(R.id.RouteMainActivityView);
-                baseCon = rootView.getContext();
-                rootView.setOnClickListener(new View.OnClickListener() {
+                Button buttonInit = (Button) this.findViewById(R.id.buttonNavInit);
+                baseCon = buttonInit.getContext();
+                buttonInit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         // do your logic for long click and remember to return it

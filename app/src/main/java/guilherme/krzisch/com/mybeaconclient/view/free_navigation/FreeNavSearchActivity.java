@@ -99,7 +99,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
                         //TODO HERE verificar se é um ponto final pelo tipo do beacon para não pegar os beacons auxilixares
                         //essa porra tem que ser tipada
-                        if (bObj.getLastDistanceRegistered() < 3){// && b.getType().getDescription().equals("OBJECT_TYPE")) {
+                        if (bObj.getLastDistanceRegistered() < 2){// && b.getType().getDescription().equals("OBJECT_TYPE")) {
                             lastBeacon = b;
                             Log.i("FOUND", bObj.getRemoteId() + " Distance: " + bObj.getLastDistanceRegistered());
                             myHandler.post(myRunnable);

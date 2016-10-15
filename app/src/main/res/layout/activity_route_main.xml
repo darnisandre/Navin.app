@@ -24,7 +24,6 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Nome da Rota:"
         android:id="@+id/textViewTitleName"
-        android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -63,15 +62,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true" />
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Para selecionar essa rota pressione no centro da tela"
-        android:id="@+id/textView3"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:lines="3" />
+        android:text="Iniciar navegação"
+        android:id="@+id/buttonNavInit"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp" />
 
 </RelativeLayout>

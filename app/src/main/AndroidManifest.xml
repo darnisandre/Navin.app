@@ -32,29 +32,30 @@
         <activity
             android:name=".view.old_files.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".view.MainTabActivity"
+            android:parentActivityName=".view.MainPageActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity
             android:name=".view.sync_options.AboutActivity"
-            android:parentActivityName=".view.MainTabActivity"
+            android:label="Sobre"
+            android:parentActivityName=".view.MainPageActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity
             android:name=".view.MainTabActivity"
             android:label="@string/title_activity_main_tab"
-            android:parentActivityName=".view.MainTabActivity"
+            android:parentActivityName=".view.MainPageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity
             android:name=".view.sync_options.MainSyncActivity"
@@ -79,37 +80,59 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.free_navigation.FreeNavSearchActivity"
+            android:label="Navegação sem rota"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity
             android:name=".view.sync_options.TutorialActivity"
+            android:label="Tutorial"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity
             android:name=".view.add_routes.AddRouteActivity"
+            android:label="Adicionar rota"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity
             android:name=".view.route_navigation.RouteActivity"
+            android:label="Navegando com rota"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteLstActivity" />
         </activity>
-        <activity android:name=".view.route_navigation.RouteMainActivity"
+        <activity
+            android:name=".view.route_navigation.RouteMainActivity"
+            android:label="Detalhes da rota"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="guilherme.krzisch.com.mybeaconclient.view.MainTabActivity" />
+                android:value="guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteLstActivity" />
+        </activity>
+        <activity
+            android:name=".view.MainPageActivity"
+            android:label="Início"
+            android:parentActivityName=".view.MainPageActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
+        </activity>
+        <activity android:name=".view.route_navigation.RouteLstActivity"
+            android:label="Rotas disponíveis"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
     </application>
 

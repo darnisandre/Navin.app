@@ -37,6 +37,7 @@ import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.BeaconObject;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
+import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
 import guilherme.krzisch.com.mybeaconclient.view.testes.CompassActivity;
 import guilherme.krzisch.com.mybeaconclient.view.MainTabActivity;
 import navin.dto.BeaconDTO;
@@ -69,7 +70,7 @@ public class MainSyncActivity extends AppCompatActivity {
         buttonInit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
+                Intent intent = new Intent(getBaseContext(), MainPageActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -230,6 +231,7 @@ public class MainSyncActivity extends AppCompatActivity {
                 //MyApp.setLocation(MyApp.getInternalCache().getLocations(-30.05849,-51.17602).get(0));
                 MyApp.setLocation(MyApp.getInternalCache().getLocations(0,0).get(0));
                 MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+                //MyApp.setOriginalRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 

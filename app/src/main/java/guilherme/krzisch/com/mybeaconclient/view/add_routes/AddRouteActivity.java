@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
+import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
 import guilherme.krzisch.com.mybeaconclient.view.MainTabActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import navin.dto.BeaconDTO;
@@ -152,7 +153,7 @@ public class AddRouteActivity extends AppCompatActivity {
             MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
             Toast.makeText(getBaseContext(), "Rota adicionada com sucesso!", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(getBaseContext(), MainTabActivity.class);
+            Intent intent = new Intent(getBaseContext(), MainPageActivity.class);
             startActivity(intent);
             finish();
         }else{

@@ -200,7 +200,7 @@ public class RouteActivity extends AppCompatActivity {
                     if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
                         Log.i("UUID","Distance: " + bObj.getLastDistanceRegistered() + " ID: " + bObj.getRemoteId());
-                        if (bObj.getLastDistanceRegistered() < 3) {
+                        if (bObj.getLastDistanceRegistered() < 2) {
                             BeaconNode b2 = rotaCalculada.get(0);
                             Log.i("UUID","ID esperado: " + b2.getBeacon().getId().toString());
                             Log.i("UUID","ID encontrado: " + bObj.getRemoteId() + " Distance: " + bObj.getLastDistanceRegistered());
@@ -217,7 +217,7 @@ public class RouteActivity extends AppCompatActivity {
                             else{
                                 //TODO HERE verificar se o ponto é um OBJECT e está na rota (mesmo não sendo o próximo)
                                 //então mostrar informações e remover ponto da lista.
-                                //estou no caminho ~~certo~~
+                                //estou no caminho errado mas ~~certo~~
                                 /*lastBeacon = b;
                                 Log.i("ROTA","continuando rota");
                                 rotaCalculada = tree.getRoute(idLst, b.getId());
