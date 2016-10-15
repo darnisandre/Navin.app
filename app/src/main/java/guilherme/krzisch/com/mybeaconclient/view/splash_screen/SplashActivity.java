@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import guilherme.krzisch.com.mybeaconclient.view.sync_options.MainLocationActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.MainSyncActivity;
 
 /**
@@ -15,7 +16,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, MainSyncActivity.class);
+        Intent intent = new Intent(this, MainLocationActivity.class);
         startActivity(intent);
         finish();
     }

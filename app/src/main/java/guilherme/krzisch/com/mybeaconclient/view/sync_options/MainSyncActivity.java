@@ -271,6 +271,7 @@ public class MainSyncActivity extends AppCompatActivity {
     }
 
     public void enableBT(View view){
+
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!mBluetoothAdapter.isEnabled()){
             Intent intentBtEnabled = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);

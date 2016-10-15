@@ -61,9 +61,6 @@
             android:name=".view.sync_options.MainSyncActivity"
             android:label="@string/action_settings"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".view.splash_screen.SplashActivity"
@@ -127,12 +124,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
-        <activity android:name=".view.route_navigation.RouteLstActivity"
+        <activity
+            android:name=".view.route_navigation.RouteLstActivity"
             android:label="Rotas disponíveis"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
+        </activity>
+        <activity android:name=".view.sync_options.MainLocationActivity"
+            android:label="Seu local"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
     </application>
 
