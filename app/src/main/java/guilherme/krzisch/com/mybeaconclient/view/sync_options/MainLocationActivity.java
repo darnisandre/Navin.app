@@ -171,8 +171,18 @@ public class MainLocationActivity extends AppCompatActivity {
 
                 //adiciona todos eles no framework
                 for (BeaconDTO b : bLst) {
+
+                    int type;
+                    Log.i("BTYPE:", b.getType().getDescription());
+                    if(b.getType().getDescription().equals("OBJECT_BEACON_TYPE")){
+                        type = BeaconObject.OBJECT_BEACON_TYPE;
+                    }else if(b.getType().getDescription().equals("SECTOR_BEACON_TYPE")) {
+                        type = BeaconObject.SECTOR_BEACON_TYPE;
+                    }else{
+                        type = 0;
+                    }
                     BeaconObject a = new BeaconObject(String.valueOf(b.getId()), b.getUuid(),
-                            Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), 0, "", 0, 0);
+                            Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), type, "", 0, 0);
                     ar.add(a);
                 }
                 MyBeaconFacade.addBeaconsLocally(ar);
@@ -206,8 +216,16 @@ public class MainLocationActivity extends AppCompatActivity {
 
             //adiciona todos eles no framework
             for (BeaconDTO b : bLst) {
+                int type;
+                if(b.getType().getDescription().equals("OBJECT_BEACON_TYPE")){
+                    type = BeaconObject.OBJECT_BEACON_TYPE;
+                }else if(b.getType().getDescription().equals("SECTOR_BEACON_TYPE")) {
+                    type = BeaconObject.SECTOR_BEACON_TYPE;
+                }else{
+                    type = 0;
+                }
                 BeaconObject a = new BeaconObject(String.valueOf(b.getId()), b.getUuid(),
-                        Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), 0, "", 0, 0);
+                        Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), type, "", 0, 0);
                 ar.add(a);
             }
             MyBeaconFacade.addBeaconsLocally(ar);
