@@ -2,4 +2,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".view.free_navigation.FreeNavSearchActivity">
+
+    <item android:id="@+id/action_home"
+        android:icon="@drawable/ic_action_home"
+        android:title="@string/voltar_inicial"
+        app:showAsAction="always" />
 </menu>

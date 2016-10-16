@@ -16,7 +16,7 @@
         android:choiceMode="multipleChoice"
         android:layout_below="@+id/editTextDesc"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="37dp" />
+        android:layout_above="@+id/buttonSave" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,10 +43,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editTextDesc"
+
         android:layout_below="@+id/editTextName"
         android:layout_alignEnd="@+id/editTextName"
         android:layout_alignStart="@+id/editTextName"
         android:hint="Descrição da Rota"
         android:inputType="textCapSentences|textAutoComplete|textAutoCorrect" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar rota"
+        android:id="@+id/buttonSave"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

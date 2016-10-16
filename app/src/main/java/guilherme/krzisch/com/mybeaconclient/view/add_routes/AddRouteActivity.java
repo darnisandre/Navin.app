@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
 import guilherme.krzisch.com.mybeaconclient.view.MainTabActivity;
+import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import navin.dto.BeaconDTO;
 import navin.dto.CategoryDTO;
@@ -37,6 +39,16 @@ public class AddRouteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_route);
+
+        Button saveRoute = (Button) findViewById(R.id.buttonSave);
+
+        //onclick do botão
+        saveRoute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveNewRoute();
+            }
+        });
 
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.listViewCategories);
@@ -75,7 +87,7 @@ public class AddRouteActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_route, menu);
+        getMenuInflater().inflate(R.menu.menu_free_nav, menu);
         return true;
     }
 
@@ -85,11 +97,17 @@ public class AddRouteActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()){
-            case R.id.action_ok:
-                saveNewRoute();
+            case R.id.action_home:
+                goToMmain();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void goToMmain() {
+        Intent intent = new Intent(getBaseContext(), MainPageActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void saveNewRoute() {

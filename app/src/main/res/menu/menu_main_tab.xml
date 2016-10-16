@@ -7,7 +7,7 @@
     <item android:id="@+id/action_addroute"
         android:icon="@drawable/ic_action_add_to_queue"
         android:title="@string/action_addroute"
-        app:showAsAction="always" />
+        app:showAsAction="never" />
 
     <item android:id="@+id/action_clear"
         android:title="@string/action_clear"
