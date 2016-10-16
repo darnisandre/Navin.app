@@ -156,7 +156,7 @@ public class RouteActivity extends AppCompatActivity {
                     if(lastBeacon == null || lastBeacon.getId() != b.getId()) {
                         BeaconObject bObj = MyBeaconManager.getInstance().getBeaconObject(String.valueOf(b.getId()));
                         Log.i("UUID","Distance: " + bObj.getLastDistanceRegistered() + " ID: " + bObj.getRemoteId());
-                        if (bObj.getLastDistanceRegistered() < 3) {
+                        if (bObj.getLastDistanceRegistered() < 2) {
                             Log.i("ROTA","inciando rota");
                             lastBeacon = b;
                             rotaCalculada = tree.getRoute(idLst, b.getId());

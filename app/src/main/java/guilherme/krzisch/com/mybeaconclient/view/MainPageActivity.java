@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.add_routes.AddRouteActivity;
@@ -19,6 +21,7 @@ import guilherme.krzisch.com.mybeaconclient.view.free_navigation.FreeNavSearchAc
 import guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteLstActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.AboutActivity;
 import guilherme.krzisch.com.mybeaconclient.view.sync_options.TutorialActivity;
+import navin.dto.RouteDTO;
 
 public class MainPageActivity extends AppCompatActivity {
 
@@ -98,8 +101,9 @@ public class MainPageActivity extends AppCompatActivity {
     private void clearRoutes(){
         //TODO recarregar rotas do servidor
         Toast.makeText(getBaseContext(), "Rotas personalizadas removidas!", Toast.LENGTH_LONG).show();
-        MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
-        MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+        //MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
+        //MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+        MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
         refresh();
     }
 

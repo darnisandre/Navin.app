@@ -32,6 +32,7 @@ public class MyApp extends Application {
 
     //beacons context
     private static List<RouteDTO> rLst;
+    private static List<RouteDTO> rLstPersonalized;
     private static BeaconMappingDTO mapping;
     private static LocationDTO loc;
     private static List<CategoryDTO> cat;
@@ -48,6 +49,9 @@ public class MyApp extends Application {
 
     public static List<RouteDTO> getRoutes(){ return rLst;}
     public static void setRoutes(List<RouteDTO> r){ rLst = r;}
+
+    public static List<RouteDTO> getRoutesPersonalized(){ return rLstPersonalized;}
+    public static void setRoutesPersonalized(List<RouteDTO> r){ rLstPersonalized = r;}
 
     public static BeaconMappingDTO getBeaconMapping(){ return mapping;}
     public static void setBeaconMapping(BeaconMappingDTO b){ mapping = b;}

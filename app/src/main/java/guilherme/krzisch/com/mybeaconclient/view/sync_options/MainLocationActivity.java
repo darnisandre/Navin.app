@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,7 +15,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,18 +32,24 @@ import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.BeaconObject;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
+import guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteMainActivity;
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
+import navin.dto.LocationDTO;
+import navin.dto.RouteDTO;
 
 public class MainLocationActivity extends AppCompatActivity {
 
     LocationManager lm = null;
     Location location = null;
+    public static Context baseContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_location);
+
+        baseContext = getBaseContext();
 
         //TODO achar um modo de poder utilizar chamada REST na main sem usar isso
         if (android.os.Build.VERSION.SDK_INT > 9) {
@@ -50,6 +61,8 @@ public class MainLocationActivity extends AppCompatActivity {
         error.setVisibility(View.INVISIBLE);
         ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
         local.setVisibility(View.INVISIBLE);
+        ListView listView = (ListView) findViewById(R.id.listViewLocations);
+        listView.setVisibility(View.INVISIBLE);
 
         enableBlueTooth();
 
@@ -97,6 +110,8 @@ public class MainLocationActivity extends AppCompatActivity {
         local.setVisibility(View.VISIBLE);
         TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
         location.setText("");
+        ListView listView = (ListView) findViewById(R.id.listViewLocations);
+        listView.setVisibility(View.INVISIBLE);
 
         enableBlueTooth();
     }
@@ -108,31 +123,78 @@ public class MainLocationActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 TextView error = (TextView) findViewById(R.id.textViewError);
                 error.setVisibility(View.INVISIBLE);
+                ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
+                local.setVisibility(View.INVISIBLE);
                 //chama método para buscar os locais
                 loadLocations();
             } else {
                 TextView error = (TextView) findViewById(R.id.textViewError);
                 error.setVisibility(View.VISIBLE);
+                ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
+                local.setVisibility(View.INVISIBLE);
                 //mostra mensagem de erro
             }
         }
     }
 
     private void locationFound() {
-        if (getLatitude() != 0 && getLongitude() != 0) {
 
+        ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
+        local.setVisibility(View.VISIBLE);
+        TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
+        location.setText("Atualizando dados");
 
-            ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
-            local.setVisibility(View.VISIBLE);
-            TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
-            location.setText("Atualizando dados");
+        refreshData(-1);
+    }
 
-            //-30.05849
-            //-51.17602
+    private void refreshData(int locationID){
 
-            //MyApp.setLocation(MyApp.getInternalCache().getLocations(-30.05849,-51.17602).get(0));
-            MyApp.setLocation(MyApp.getInternalCache().getLocations(0, 0).get(0));
+        //se encontrou pelo GPS
+        if(locationID == -1){
+            if (getLatitude() != 0 && getLongitude() != 0) {
+
+                //-30.05849
+                //-51.17602
+
+                //MyApp.setLocation(MyApp.getInternalCache().getLocations(-30.05849,-51.17602).get(0));
+                MyApp.setLocation(MyApp.getInternalCache().getLocations(0, 0).get(0));
+                MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+                MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
+                MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
+                MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
+
+                //adiciona os beacons no framework e inicia monitoramento
+                BeaconMappingDTO mapping = MyApp.getBeaconMapping();
+                List<BeaconDTO> bLst = mapping.getBeacons();
+
+                ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
+
+                //adiciona todos eles no framework
+                for (BeaconDTO b : bLst) {
+                    BeaconObject a = new BeaconObject(String.valueOf(b.getId()), b.getUuid(),
+                            Integer.valueOf(b.getMajor().toString()), Integer.valueOf(b.getMinor().toString()), 0, "", 0, 0);
+                    ar.add(a);
+                }
+                MyBeaconFacade.addBeaconsLocally(ar);
+
+                //inicia o monitoramento
+                MyBeaconFacade.startMyBeaconsManagerOperation();
+
+                Toast.makeText(getBaseContext(), "Dados atualizados com sucesso!", Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(getBaseContext(), MainPageActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        }
+        //se selecionou um local da lista
+        else{
+
+            MyApp.setLocation(MyApp.getInternalCache().getLocation((long)locationID));
             MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+            MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
             MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
             MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 
@@ -160,13 +222,70 @@ public class MainLocationActivity extends AppCompatActivity {
             finish();
 
         }
+
     }
 
     private void locationSelect() {
+
         ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
         local.setVisibility(View.INVISIBLE);
-        //TODO HERE
-        //falta método no rest
+
+        final List<LocationDTO> locals = MyApp.getInternalCache().getLocations();
+
+        //TODO HERE mostrar lista de locais
+        List<String> values = new ArrayList<String>();
+        for(LocationDTO b : locals){
+            values.add(b.getDescription());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, values){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the current item from ListView
+                View view = super.getView(position,convertView,parent);
+                if(position %2 == 1)
+                {
+                    // Set a background color for ListView regular row/item
+                    view.setBackgroundColor(Color.parseColor("#eef9f9"));
+                }
+                else
+                {
+                    // Set the background color for alternate row/item
+                    view.setBackgroundColor(Color.parseColor("#bde9e7"));
+                }
+                return view;
+            }
+        };
+
+        // Get ListView object from xml
+        ListView listView = (ListView) findViewById(R.id.listViewLocations);
+        listView.setVisibility(View.VISIBLE);
+
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.i("LIST", "CLICK");
+                //Capturando o objeto associado ao item da lista
+                String objetoExemplo = (String) adapterView.getAdapter().getItem(position);
+                int intExemplo = -1;
+                for(LocationDTO r : locals){
+                    if(r.getDescription().equals(objetoExemplo)){
+                        intExemplo = Integer.parseInt(r.getId().toString());
+                        ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
+                        local.setVisibility(View.VISIBLE);
+                        TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
+                        location.setText("Atualizando dados");
+                        refreshData(intExemplo);
+                        return;
+                    }
+                }
+            }
+        });
     }
 
     private void loadLocations() {
@@ -186,13 +305,18 @@ public class MainLocationActivity extends AppCompatActivity {
                 TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
                 ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
                 local.setVisibility(View.VISIBLE);
+                ListView listView = (ListView) findViewById(R.id.listViewLocations);
+                listView.setVisibility(View.INVISIBLE);
                 location.setText("Buscando localização");
             }
             else{
                 ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
                 local.setVisibility(View.INVISIBLE);
+                ListView listView = (ListView) findViewById(R.id.listViewLocations);
+                listView.setVisibility(View.INVISIBLE);
                 TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
                 location.setText("Localização obitida");
+
                 locationFound();
             }
         }
@@ -235,6 +359,7 @@ public class MainLocationActivity extends AppCompatActivity {
             local.setVisibility(View.INVISIBLE);
             TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
             location.setText("Localização obitida");
+
             locationFound();
 
         }

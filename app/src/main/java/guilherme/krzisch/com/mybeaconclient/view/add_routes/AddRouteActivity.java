@@ -135,8 +135,14 @@ public class AddRouteActivity extends AppCompatActivity {
             //Salva na lista de rotas
             ArrayList<RouteDTO> newValues = new ArrayList<RouteDTO>();
             for (RouteDTO r : routeLst) {
-                newValues.add(r);
+                //newValues.add(r);
                 //pega o maior id de rota
+                if(r.getId() > routeId) routeId = r.getId();
+            }
+
+            List<RouteDTO> routeLstPersonalized = MyApp.getRoutesPersonalized();
+            for (RouteDTO r : routeLstPersonalized) {
+                newValues.add(r);
                 if(r.getId() > routeId) routeId = r.getId();
             }
 
@@ -148,9 +154,10 @@ public class AddRouteActivity extends AppCompatActivity {
             newRoute.setDescription(editDesc.getText().toString().equals("") ? "Rota criada pelo usuário" : editDesc.getText().toString());
 
             newValues.add(newRoute);
-            MyApp.setRoutes(newValues);
+            MyApp.setRoutesPersonalized(newValues);
 
-            MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
+            //TODO HERE ver como salvar as rotaas personalizadas no cache
+            //MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
             Toast.makeText(getBaseContext(), "Rota adicionada com sucesso!", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(getBaseContext(), MainPageActivity.class);

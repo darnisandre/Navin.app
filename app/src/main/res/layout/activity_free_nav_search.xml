@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageViewFreeNav"
         android:src="@drawable/estimote_image"
-        android:layout_above="@+id/buttonSearchFreeNav"
+        android:layout_alignBottom="@+id/buttonSearchFreeNav"
         android:layout_centerHorizontal="true" />
 
     <ProgressBar
@@ -55,6 +55,7 @@
         android:text="Buscar novamente"
         android:id="@+id/buttonSearchFreeNav"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp" />
 
 </RelativeLayout>

@@ -39,12 +39,20 @@ public class RouteLstActivity extends AppCompatActivity {
 
         ListView listView;
         final List<RouteDTO> routes;
+        ArrayList<RouteDTO> aux = new ArrayList<RouteDTO>();
+        List<RouteDTO> routesServer;
+        List<RouteDTO> routesPersonalized;
 
         // Get ListView object from xml
         listView = (ListView) rootView4.findViewById(R.id.listViewRoutes);
 
-        routes = MyApp.getRoutes();
+        routesServer = MyApp.getRoutes();
+        routesPersonalized = MyApp.getRoutesPersonalized();
 
+        aux.addAll(routesServer);
+        aux.addAll(routesPersonalized);
+
+        routes = aux;
 
         List<String> values = new ArrayList<String>();
         for(RouteDTO b : routes){

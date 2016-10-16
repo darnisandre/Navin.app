@@ -42,11 +42,6 @@ public class InternalCache {
         return routes;
     }
 
-    public void setRoutes(final int locationId, List<RouteDTO> routes) {
-        String routesKey = String.format(ROUTES_KEY, locationId);
-        InternalStorage.writeObject(context, routesKey, routes);
-    }
-
     public void refreshRoutes(final int locationId) {
         String routesKey = String.format(ROUTES_KEY, locationId);
         List<RouteDTO> routes = null;

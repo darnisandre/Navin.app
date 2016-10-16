@@ -133,7 +133,7 @@
                 android:value="guilherme.krzisch.com.mybeaconclient.view.MainPageActivity" />
         </activity>
         <activity android:name=".view.sync_options.MainLocationActivity"
-            android:label="Seu local"
+            android:label="Identificando local"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
