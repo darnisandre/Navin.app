@@ -101,6 +101,30 @@ public class InternalCache {
         }
         return locations;
     }
+    public LocationDTO getLocation(final Long id) {
+        HashMap<Long,LocationDTO> cacheLocations = getCacheLocations();
+        if(cacheLocations.get(id)!=null){
+            return cacheLocations.get(id);
+        }
+        LocationDTO location= restClient.getLocation(id);
+        return location;
+    }
+
+    public List<LocationDTO> getLocations() {
+        List<LocationDTO> locations= restClient.getLocations();
+        if(locations!=null){
+            HashMap<Long,LocationDTO> cacheLocations = getCacheLocations();
+            for(LocationDTO l : locations){
+                LocationDTO cacheLocation = cacheLocations.get(l.getId());
+                if(cacheLocation != null && l.getLastUpdated().after(cacheLocation.getLastUpdated())){
+                    cleanCacheLocation(l.getId());
+                }
+                cacheLocations.put(l.getId(),l);
+            }
+            storeCacheLocations(cacheLocations);
+        }
+        return locations;
+    }
 
     private void cleanCacheLocation(Long locationId) {
         InternalStorage.deleteObject(context,String.format(BEACON_MAPPING_KEY, locationId));

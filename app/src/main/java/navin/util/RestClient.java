@@ -61,4 +61,14 @@ public class RestClient {
         LocationDTO[] locations = getForObject(url, LocationDTO[].class,lat,longitude);
         return Util.asList(locations);
     }
+    public LocationDTO getLocation(final Long id){
+        final String url = restUrl + "location/{id}";
+        LocationDTO location = getForObject(url, LocationDTO.class,id);
+        return location;
+    }
+    public List<LocationDTO> getLocations(){
+        final String url = restUrl + "location/all";
+        LocationDTO[] locations = getForObject(url, LocationDTO[].class);
+        return Util.asList(locations);
+    }
 }
