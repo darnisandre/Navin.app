@@ -68,7 +68,15 @@ public class RouteActivity extends AppCompatActivity {
                     break;
                 }
             }
-
+            if(route == null){
+                List<RouteDTO> routeLstPersonalized = MyApp.getRoutesPersonalized();
+                for(RouteDTO r : routeLstPersonalized){
+                    if(r.getId() == value){
+                        route = r;
+                        break;
+                    }
+                }
+            }
 
             if(route != null) {
                 bLst = route.getBeacons();
@@ -84,51 +92,7 @@ public class RouteActivity extends AppCompatActivity {
                 TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
                 textViewTitle.setText(route.getName());
 
-                //TODO HERE pegar o id do beacon mais proximo pra começar a rota
-                //TODO HERE montar a rota a partir desse id
-                //TODO HERE iniciar navegação
-                /*ar = new ArrayList<BeaconObject>();
-
-                //adiciona todos eles no framework
-                List<BeaconDTO> bLst2 = mapping.getBeacons();
-                for (BeaconDTO b1: bLst2) {
-                    BeaconObject a = new BeaconObject(String.valueOf(b1.getId()), b1.getUuid(),
-                            Integer.valueOf(b1.getMajor().toString()), Integer.valueOf(b1.getMinor().toString()), 0, "", 0,0);
-                    ar.add(a);
-                }
-                MyBeaconFacade.addBeaconsLocally(ar);
-
-                //inicia o monitoramento
-                MyBeaconFacade.startMyBeaconsManagerOperation();*/
-
                 getProximityBeacon();
-
-
-                //Isso é só pra começar do beacon inicial enquanto não pegamos o que ta mais perto dele
-                /*Long minorId = Long.MAX_VALUE;
-                List<BeaconDTO> auxLst = mapping.getBeacons();
-                for (BeaconDTO bDto : auxLst) {
-                    if (bDto.getId() < minorId) minorId = bDto.getId();
-                }*/
-
-                /*List<BeaconNode> withoutHeur = tree.getRoute(idLst, minorId);
-                List<BeaconNode> withHeur = tree.getRouteTspHeuristic(idLst, minorId);
-
-                String withoutHeuristic = "Caminho sem heurísitica: \n";
-                for (BeaconNode bn : withoutHeur) {
-                    withoutHeuristic += bn.getBeacon().getId() + " > ";
-                }
-
-                String withHeuristic = "Caminho com heurísitica: \n";
-                for (BeaconNode bn : withHeur) {
-                    withHeuristic += bn.getBeacon().getId() + " > ";
-                }
-
-                TextView textViewFrstPath = (TextView) this.findViewById(R.id.textViewFrstPath);
-                TextView textViewScndPath = (TextView) this.findViewById(R.id.textViewScndPath);
-
-                textViewFrstPath.setText(withoutHeuristic);
-                textViewScndPath.setText(withHeuristic);*/
             }
 
         }

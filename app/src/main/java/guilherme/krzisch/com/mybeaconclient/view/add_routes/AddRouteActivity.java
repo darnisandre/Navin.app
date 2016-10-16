@@ -175,7 +175,7 @@ public class AddRouteActivity extends AppCompatActivity {
             MyApp.setRoutesPersonalized(newValues);
 
             //TODO HERE ver como salvar as rotaas personalizadas no cache
-            //MyApp.getInternalCache().setRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
+            MyApp.getInternalCache().setRoutesPersonalized(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
             Toast.makeText(getBaseContext(), "Rota adicionada com sucesso!", Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(getBaseContext(), MainPageActivity.class);

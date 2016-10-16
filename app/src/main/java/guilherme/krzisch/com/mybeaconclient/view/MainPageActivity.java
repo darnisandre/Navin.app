@@ -102,7 +102,8 @@ public class MainPageActivity extends AppCompatActivity {
         //TODO recarregar rotas do servidor
         Toast.makeText(getBaseContext(), "Rotas personalizadas removidas!", Toast.LENGTH_LONG).show();
         //MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
-        //MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+        //MyApp.setRoutesPersonalized(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
+        MyApp.getInternalCache().setRoutesPersonalized(Integer.parseInt(MyApp.getLocation().getId().toString()), new ArrayList<RouteDTO>());
         MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
         refresh();
     }

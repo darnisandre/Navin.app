@@ -46,12 +46,19 @@ public class RouteMainActivity extends AppCompatActivity {
 
         if(value != -1){
             List<RouteDTO> routeLst = MyApp.getRoutes();
-
-
             for(RouteDTO r : routeLst){
                 if(r.getId() == value){
                     route = r;
                     break;
+                }
+            }
+            if(route == null){
+                List<RouteDTO> routeLstPersonalized = MyApp.getRoutesPersonalized();
+                for(RouteDTO r : routeLstPersonalized){
+                    if(r.getId() == value){
+                        route = r;
+                        break;
+                    }
                 }
             }
 

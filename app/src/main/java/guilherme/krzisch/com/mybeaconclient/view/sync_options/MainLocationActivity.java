@@ -159,7 +159,7 @@ public class MainLocationActivity extends AppCompatActivity {
                 //MyApp.setLocation(MyApp.getInternalCache().getLocations(-30.05849,-51.17602).get(0));
                 MyApp.setLocation(MyApp.getInternalCache().getLocations(0, 0).get(0));
                 MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
-                MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
+                MyApp.setRoutesPersonalized(MyApp.getInternalCache().getRoutesPersonalized(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
                 MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 
@@ -194,7 +194,7 @@ public class MainLocationActivity extends AppCompatActivity {
 
             MyApp.setLocation(MyApp.getInternalCache().getLocation((long)locationID));
             MyApp.setRoutes(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
-            MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
+            MyApp.setRoutesPersonalized(MyApp.getInternalCache().getRoutesPersonalized(Integer.parseInt(MyApp.getLocation().getId().toString())));
             MyApp.setBeaconMapping(MyApp.getInternalCache().getBeaconMapping(Integer.parseInt(MyApp.getLocation().getId().toString())));
             MyApp.setCategories(MyApp.getInternalCache().getCategories(Integer.parseInt(MyApp.getLocation().getId().toString())));
 
