@@ -57,7 +57,8 @@ public class AddRouteActivity extends AppCompatActivity {
 
         List<String> values = new ArrayList<String>();
         for(CategoryDTO b : categories){
-            values.add(b.getName());
+            if(!(b.getId() == 1))
+                values.add(b.getName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -82,6 +83,7 @@ public class AddRouteActivity extends AppCompatActivity {
 
         // Assign adapter to ListView
         listView.setAdapter(adapter);
+
     }
 
     @Override

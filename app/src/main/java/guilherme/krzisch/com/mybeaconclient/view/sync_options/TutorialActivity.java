@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import guilherme.krzisch.com.mybeaconclient.MyApp;
 import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
 
@@ -15,6 +16,7 @@ public class TutorialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
+
     }
 
     @Override

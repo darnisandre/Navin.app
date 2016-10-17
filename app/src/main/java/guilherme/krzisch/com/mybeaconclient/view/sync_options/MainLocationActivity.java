@@ -64,6 +64,8 @@ public class MainLocationActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listViewLocations);
         listView.setVisibility(View.INVISIBLE);
 
+        MyApp.getAppTTS().initQueue("");
+
         enableBlueTooth();
 
     }

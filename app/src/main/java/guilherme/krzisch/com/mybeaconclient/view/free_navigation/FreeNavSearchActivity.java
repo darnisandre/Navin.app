@@ -49,9 +49,6 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         actionBar.setIcon(R.mipmap.ic_launcher);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        MyApp.getAppTTS().initQueue("Ande pelo local..");
-        MyApp.getAppTTS().addQueue("Assim que for identificado um beacon você será notificado.");
-
         Button buttonSearchAgain = (Button) FreeNavSearchActivityView.findViewById(R.id.buttonSearchFreeNav);
         buttonSearchAgain.setEnabled(false);
         buttonSearchAgain.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +73,9 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
-        MyApp.getAppTTS().initQueue("Buscando..");
+        MyApp.getAppTTS().initQueue("Por favor, ande pelo local.");
+        MyApp.getAppTTS().addQueue("Assim que for identificado um beacon você será notificado.");
+        MyApp.getAppTTS().addQueue("Buscando..");
         textViewAction.setText("Buscando..");
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
@@ -122,6 +121,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
             loadingImage.setVisibility(ImageView.INVISIBLE);
             //MyApp.getAppTTS().initQueue("Você está próximo a um beacon");
             MyApp.getAppTTS().addQueue(lastBeacon.getDescription());
+            MyApp.getAppTTS().addQueue("Clique em buscar novamente para continuar a navegação, ou volte à página inicial.");
             textViewAction.setText("");
             textViewDesc.setText(lastBeacon.getDescription());
 
