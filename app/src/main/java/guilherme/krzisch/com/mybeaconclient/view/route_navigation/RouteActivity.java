@@ -1,7 +1,9 @@
 package guilherme.krzisch.com.mybeaconclient.view.route_navigation;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +46,7 @@ public class RouteActivity extends AppCompatActivity {
     List<BeaconDTO> bLst = new ArrayList<BeaconDTO>();
     List<Long> idLst = new ArrayList<Long>();
     Timer timer= new Timer();
+    public static Context baseContext;
 
     private static final String TAG = "CompassActivity";
 
@@ -53,6 +56,8 @@ public class RouteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+
+        baseContext = getBaseContext();
 
         compass = new Compass(this);
         compass.arrowView = (ImageView) findViewById(R.id.imageViewPonteiro);
@@ -202,6 +207,9 @@ public class RouteActivity extends AppCompatActivity {
         public void run() {
 
             //TODO HERE vibrar o celular
+            Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(500);
 
             BeaconNode next = rotaCalculada.get(0);
             final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
