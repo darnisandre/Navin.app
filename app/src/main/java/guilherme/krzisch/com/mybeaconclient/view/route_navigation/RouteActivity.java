@@ -32,6 +32,7 @@ import navin.dto.BeaconMappingDTO;
 import navin.dto.BeaconTypeDTO;
 import navin.dto.RouteDTO;
 import navin.tree.BeaconNode;
+import navin.tree.BeaconRelation;
 import navin.tree.BeaconTree;
 
 public class RouteActivity extends AppCompatActivity {
@@ -60,6 +61,20 @@ public class RouteActivity extends AppCompatActivity {
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setIcon(R.mipmap.ic_launcher);
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        Button rootView = (Button) findViewById(R.id.buttonContinueNav);
+        rootView.setVisibility(View.INVISIBLE);
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // do your logic for long click and remember to return it
+                Button rootView = (Button) findViewById(R.id.buttonContinueNav);
+                rootView.setVisibility(View.INVISIBLE);
+                MyApp.getAppTTS().initQueue("Buscando..");
+
+                if (rotaCalculada.size() > 0) getDirection();
+            }
+        });
 
         Bundle b = getIntent().getExtras();
         int value = -1; // or other values
@@ -114,18 +129,6 @@ public class RouteActivity extends AppCompatActivity {
         Button rootView = (Button) findViewById(R.id.buttonContinueNav);
         rootView.setVisibility(View.INVISIBLE);
 
-        rootView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // do your logic for long click and remember to return it
-                Button rootView = (Button) findViewById(R.id.buttonContinueNav);
-                rootView.setVisibility(View.INVISIBLE);
-                MyApp.getAppTTS().initQueue("Buscando..");
-
-                if (rotaCalculada.size() > 0) getNextBeacon();
-            }
-        });
-
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
@@ -164,6 +167,53 @@ public class RouteActivity extends AppCompatActivity {
             }
         },0,1000);
     }
+
+    private void getDirection(){
+
+        if(lastBeacon != null){
+            BeaconNode next = rotaCalculada.get(0);
+            final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
+
+            //TODO HERE textview informando pra virar para direção x
+            TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
+            TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
+            textViewAction.setText("Vire lentamente para a direita até o celular vibrar");
+            textViewDesc.setText("" + relation.getDegree());
+
+            //TODO HERE só passar dessa parte quando estiver na direção correta
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    int roundedCompass = (int) compass.getAzimuth();
+                    int roundeRelation =  relation.getDegree() == 360 ? 0 : (int) relation.getDegree();
+
+                    if(roundedCompass == roundeRelation){
+                        myHandler.post(directionOK);
+                        this.cancel();
+                        return;
+                    }
+                }
+            },0,200);
+        }
+
+    }
+
+    final Runnable directionOK = new Runnable() {
+        public void run() {
+
+            //TODO HERE vibrar o celular
+
+            BeaconNode next = rotaCalculada.get(0);
+            final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
+
+            TextView textViewAction = (TextView) findViewById(R.id.textViewAction);
+            TextView textViewDesc = (TextView) findViewById(R.id.textViewDesc);
+            textViewAction.setText("Ande em frente por " + relation.getDistance() + " metros");
+            textViewDesc.setText("");
+            getNextBeacon();
+        }
+
+    };
 
     private void getNextBeacon() {
 
@@ -224,9 +274,6 @@ public class RouteActivity extends AppCompatActivity {
                                     myHandler.post(recalculateRoute);
                                 }
                             }
-
-                            //Log.i("FOUND", bObj.getRemoteId());
-                            //StopFreeNavigation();
                             this.cancel();
                             return;
                         }
