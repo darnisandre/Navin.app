@@ -11,7 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.InjectView;
 import guilherme.krzisch.com.mybeaconclient.MyApp;
@@ -19,6 +23,7 @@ import guilherme.krzisch.com.mybeaconclient.R;
 import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
+import navin.dto.CategoryDTO;
 import navin.dto.RouteDTO;
 import navin.tree.BeaconNode;
 import navin.tree.BeaconTree;
@@ -67,8 +72,31 @@ public class RouteMainActivity extends AppCompatActivity {
 
                 TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
                 TextView textTitle = (TextView) this.findViewById(R.id.textViewTitle);
+                TextView textCat = (TextView) this.findViewById(R.id.textViewCat);
                 textTitle.setText(route.getName());
                 textViewDesc.setText(route.getDescription());
+
+                List<BeaconDTO> beaconLst = route.getBeacons();
+                Set<String> set = new HashSet<String>();
+
+                String bodyText = "";
+
+                for(BeaconDTO b1 : beaconLst){
+                    List<CategoryDTO> cLst = b1.getCategories();
+                    if(cLst != null) {
+                        for (CategoryDTO c : cLst) {
+                            set.add(c.getName());
+                        }
+                    }
+                }
+
+                Iterator it = set.iterator();
+                while(it.hasNext()) {
+                    bodyText += ((String)(it.next()));
+                    bodyText += "\n";
+                }
+
+                textCat.setText(bodyText);
 
                 Button buttonInit = (Button) this.findViewById(R.id.buttonNavInit);
                 baseCon = buttonInit.getContext();

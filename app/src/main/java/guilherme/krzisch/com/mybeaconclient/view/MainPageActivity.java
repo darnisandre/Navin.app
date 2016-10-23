@@ -1,6 +1,8 @@
 package guilherme.krzisch.com.mybeaconclient.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -86,7 +88,7 @@ public class MainPageActivity extends AppCompatActivity {
                 goToTutorialActivity();
                 return true;
             case R.id.action_clear:
-                clearRoutes();
+                showConfirmationDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -98,11 +100,29 @@ public class MainPageActivity extends AppCompatActivity {
         finish();
     }
 
+
+    private void showConfirmationDialog(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("Tem certeza que deseja remover as rotas personalizadas?")
+                .setCancelable(false)
+                .setPositiveButton("Sim",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                clearRoutes();
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Não",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
     private void clearRoutes(){
-        //TODO recarregar rotas do servidor
         Toast.makeText(getBaseContext(), "Rotas personalizadas removidas!", Toast.LENGTH_LONG).show();
-        //MyApp.getInternalCache().refreshRoutes(Integer.parseInt(MyApp.getLocation().getId().toString()));
-        //MyApp.setRoutesPersonalized(MyApp.getInternalCache().getRoutes(Integer.parseInt(MyApp.getLocation().getId().toString())));
         MyApp.getInternalCache().setRoutesPersonalized(Integer.parseInt(MyApp.getLocation().getId().toString()), new ArrayList<RouteDTO>());
         MyApp.setRoutesPersonalized(new ArrayList<RouteDTO>());
         refresh();

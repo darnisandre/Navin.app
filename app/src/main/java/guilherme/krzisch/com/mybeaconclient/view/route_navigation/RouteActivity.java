@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.Beacon
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconFacade;
 import guilherme.krzisch.com.mybeaconclient.mybeaconframework.BasicModule.MyBeaconManager;
 import guilherme.krzisch.com.mybeaconclient.view.MainPageActivity;
+import guilherme.krzisch.com.mybeaconclient.view.util.Compass;
 import navin.dto.BeaconDTO;
 import navin.dto.BeaconMappingDTO;
 import navin.dto.BeaconTypeDTO;
@@ -42,10 +44,17 @@ public class RouteActivity extends AppCompatActivity {
     List<Long> idLst = new ArrayList<Long>();
     Timer timer= new Timer();
 
+    private static final String TAG = "CompassActivity";
+
+    private Compass compass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
+
+        compass = new Compass(this);
+        compass.arrowView = (ImageView) findViewById(R.id.imageViewPonteiro);
 
         //mostra o icone na barra
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -102,8 +111,20 @@ public class RouteActivity extends AppCompatActivity {
 
     private void getProximityBeacon() {
 
-        View rootView = this.findViewById(R.id.RouteActivityView);
-        rootView.setOnClickListener(null);
+        Button rootView = (Button) findViewById(R.id.buttonContinueNav);
+        rootView.setVisibility(View.INVISIBLE);
+
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // do your logic for long click and remember to return it
+                Button rootView = (Button) findViewById(R.id.buttonContinueNav);
+                rootView.setVisibility(View.INVISIBLE);
+                MyApp.getAppTTS().initQueue("Buscando..");
+
+                if (rotaCalculada.size() > 0) getNextBeacon();
+            }
+        });
 
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
@@ -185,21 +206,23 @@ public class RouteActivity extends AppCompatActivity {
                                 //TODO HERE verificar se o ponto é um OBJECT e está na rota (mesmo não sendo o próximo)
                                 //então mostrar informações e remover ponto da lista.
                                 //estou no caminho errado mas ~~certo~~
-                                /*lastBeacon = b;
-                                Log.i("ROTA","continuando rota");
-                                rotaCalculada = tree.getRoute(idLst, b.getId());
-                                if(rotaCalculada.size() > 0) rotaCalculada.remove(0);
-                                if(idLst.size() > 0) idLst.remove(b.getId());
-                                myHandler.post(routeOk);*/
-
-                                //senão
-                                //recalcular a rota
-                                lastBeacon = b;
-                                Log.i("ROTA","recalculando rota");
-                                rotaCalculada = tree.getRoute(idLst, b.getId());
-                                if(rotaCalculada.size() > 0) rotaCalculada.remove(0);
-                                if(idLst.size() > 0) idLst.remove(b.getId());
-                                myHandler.post(recalculateRoute);
+                                if(b.getType().equals("OBJECT_BEACON_TYPE")) {
+                                    lastBeacon = b;
+                                    Log.i("ROTA", "continuando rota");
+                                    rotaCalculada = tree.getRoute(idLst, b.getId());
+                                    if (rotaCalculada.size() > 0) rotaCalculada.remove(0);
+                                    if (idLst.size() > 0) idLst.remove(b.getId());
+                                    myHandler.post(routeOk);
+                                }else {
+                                    //senão
+                                    //recalcular a rota
+                                    lastBeacon = b;
+                                    Log.i("ROTA", "recalculando rota");
+                                    rotaCalculada = tree.getRoute(idLst, b.getId());
+                                    if (rotaCalculada.size() > 0) rotaCalculada.remove(0);
+                                    if (idLst.size() > 0) idLst.remove(b.getId());
+                                    myHandler.post(recalculateRoute);
+                                }
                             }
 
                             //Log.i("FOUND", bObj.getRemoteId());
@@ -240,26 +263,19 @@ public class RouteActivity extends AppCompatActivity {
                 }
 
                 //TODO HERE verificar se é um ponto final pelo tipo do beacon
-                //se sim
-                //textViewDesc.setText(rotaCalculada.get(0).getBeacon().getDescription());
-                //senão
-                //textViewDesc.setText(withHeuristic + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
-
-                textViewDesc.setText(withHeuristic + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
+                    textViewAction.setText("Você chegou a um de seus destinos\nPonto: " + lastBeacon.getId());
+                    textViewDesc.setText(lastBeacon.getDescription() + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                }
+                else{
+                    textViewDesc.setText(withHeuristic + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                }
 
                 MyApp.getAppTTS().addQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
-                View rootView = findViewById(R.id.RouteActivityView);
-                rootView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // do your logic for long click and remember to return it
-                        MyApp.getAppTTS().initQueue("Buscando..");
-
-                        if(rotaCalculada.size() > 0) getNextBeacon();
-                    }
-                });
+                Button rootView = (Button) findViewById(R.id.buttonContinueNav);
+                rootView.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -290,16 +306,8 @@ public class RouteActivity extends AppCompatActivity {
                 MyApp.getAppTTS().addQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
-                View rootView = findViewById(R.id.RouteActivityView);
-                rootView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // do your logic for long click and remember to return it
-                        MyApp.getAppTTS().initQueue("Buscando..");
-
-                        if (rotaCalculada.size() > 0) getNextBeacon();
-                    }
-                });
+                Button rootView = (Button) findViewById(R.id.buttonContinueNav);
+                rootView.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -336,5 +344,31 @@ public class RouteActivity extends AppCompatActivity {
         timer.cancel();
         //MyBeaconFacade.stopMyBeaconsManagerOperation();
         MyApp.getAppTTS().initQueue("");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "start compass");
+        compass.start();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        compass.stop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        compass.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "stop compass");
+        compass.stop();
     }
 }

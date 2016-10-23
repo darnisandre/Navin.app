@@ -20,33 +20,66 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/progressBarLoading">
+
+        <ImageView
+            android:id="@+id/imageViewBussola"
+            android:layout_width="236dp"
+            android:layout_height="236dp"
+            android:contentDescription="@string/compass_dial"
+            android:src="@drawable/dial"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:id="@+id/imageViewPonteiro"
+            android:layout_width="14dp"
+            android:layout_height="172dp"
+            android:contentDescription="@string/compass_hands"
+            android:scaleType="fitXY"
+            android:src="@drawable/hands"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Continuar navegação"
+            android:id="@+id/buttonContinueNav"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Navegue livremente"
         android:id="@+id/textViewTitle"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/textViewAction" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textViewAction"
         android:layout_below="@+id/textViewTitle"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="54dp"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@+id/progressBarLoading" />
+        android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/textViewDesc"
-        android:layout_alignTop="@+id/progressBarLoading"
+        android:layout_below="@+id/textViewAction"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignBottom="@+id/progressBarLoading"
+        android:layout_alignParentEnd="true"
+        android:layout_weight="0.20" />
+
 </RelativeLayout>

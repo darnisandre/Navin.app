@@ -81,5 +81,5 @@
     <string name="action_save">Salvar</string>
     <string name="action_tuto">Tutorial</string>
     <string name="action_clear">Limpar Rotas Personalizadas</string>
-    <string name="voltar_inicial">Voltar à página inicial</string>
+    <string name="voltar_inicial">Voltar a página inicial</string>
 </resources>

@@ -11,14 +11,6 @@
     tools:context="guilherme.krzisch.com.mybeaconclient.view.route_navigation.RouteMainActivity"
     android:background="#ffffff">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView3"
-        android:src="@drawable/estimote3_image"
-        android:layout_alignParentEnd="false"
-        android:layout_below="@+id/textViewDescName" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,12 +48,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="texto"
         android:id="@+id/textViewDesc"
-        android:lines="8"
+        android:lines="6"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textViewDescName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -71,5 +62,25 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Categorias presentes:"
+        android:id="@+id/textViewCatTitle"
+        android:layout_below="@+id/textViewDesc"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textViewCat"
+        android:layout_below="@+id/textViewCatTitle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/buttonNavInit"
+        android:lines="6" />
 
 </RelativeLayout>
