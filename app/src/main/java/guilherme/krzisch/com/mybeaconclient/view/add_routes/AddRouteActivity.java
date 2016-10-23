@@ -33,7 +33,7 @@ import navin.dto.RouteDTO;
 public class AddRouteActivity extends AppCompatActivity {
 
     ListView listView;
-    List<CategoryDTO> categories;
+    ArrayList<CategoryDTO> categories = new ArrayList<CategoryDTO>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +53,12 @@ public class AddRouteActivity extends AppCompatActivity {
         // Get ListView object from xml
         listView = (ListView) findViewById(R.id.listViewCategories);
 
-        categories = MyApp.getCategories();
+        categories.addAll(MyApp.getCategories());
+        categories.remove(0);
 
         List<String> values = new ArrayList<String>();
         for(CategoryDTO b : categories){
-            if(!(b.getId() == 1))
-                values.add(b.getName());
+           values.add(b.getName());
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,

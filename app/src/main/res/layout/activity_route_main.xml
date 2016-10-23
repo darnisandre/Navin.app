@@ -48,7 +48,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="texto"
         android:id="@+id/textViewDesc"
-        android:lines="6"
+        android:lines="4"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_below="@+id/textViewDescName"
@@ -60,8 +60,7 @@
         android:text="Iniciar navegação"
         android:id="@+id/buttonNavInit"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp" />
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
