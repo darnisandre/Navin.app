@@ -37,6 +37,14 @@ public class Compass implements SensorEventListener {
         msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
+    public float getAzimuth(){
+        return azimuth;
+    }
+
+    public float getCurrectAzimuth(){
+        return currectAzimuth;
+    }
+
     public void start() {
         sensorManager.registerListener(this, gsensor,
                 SensorManager.SENSOR_DELAY_GAME);

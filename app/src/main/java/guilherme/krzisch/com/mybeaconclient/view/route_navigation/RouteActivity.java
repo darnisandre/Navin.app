@@ -248,7 +248,7 @@ public class RouteActivity extends AppCompatActivity {
 
             loadingImage.setVisibility(ImageView.INVISIBLE);
 
-            //TODO HERE verificar se acabou a rota
+            //verificar se acabou a rota
             if (rotaCalculada.size() == 0) {
                 textViewAction.setText("Você chegou ao seu destino final\nPonto: " + lastBeacon.getId());
                 textViewDesc.setText(lastBeacon.getDescription());
@@ -262,7 +262,7 @@ public class RouteActivity extends AppCompatActivity {
                     withHeuristic += bn.getBeacon().getId() + ", ";
                 }
 
-                //TODO HERE verificar se é um ponto final pelo tipo do beacon
+                //verificar se é um ponto final pelo tipo do beacon
                 if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
                     textViewAction.setText("Você chegou a um de seus destinos\nPonto: " + lastBeacon.getId());
                     textViewDesc.setText(lastBeacon.getDescription() + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
