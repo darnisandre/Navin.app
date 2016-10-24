@@ -1,8 +1,10 @@
 package guilherme.krzisch.com.mybeaconclient.view.free_navigation;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,12 +39,15 @@ public class FreeNavSearchActivity extends AppCompatActivity {
     ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
     BeaconDTO lastBeacon = null;
     Timer timer = new Timer();
+    public static Context baseContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free_nav_search);
         ButterKnife.inject(this);
+
+        baseContext = getBaseContext();
 
         //mostra o icone na barra
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
@@ -110,6 +115,10 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
     final Runnable myRunnable = new Runnable() {
         public void run() {
+
+            Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 100 milliseconds
+            v.vibrate(100);
 
             MyApp.getAppTTS().addQueue("Encontrado");
 

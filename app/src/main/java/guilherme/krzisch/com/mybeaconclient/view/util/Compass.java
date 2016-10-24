@@ -10,6 +10,7 @@ package guilherme.krzisch.com.mybeaconclient.view.util;
         import android.hardware.SensorEventListener;
         import android.hardware.SensorManager;
         import android.util.Log;
+        import android.view.View;
         import android.view.animation.Animation;
         import android.view.animation.RotateAnimation;
         import android.widget.ImageView;
@@ -62,8 +63,8 @@ public class Compass implements SensorEventListener {
             return;
         }
 
-        Log.i(TAG, "will set rotation from " + currectAzimuth + " to "
-                + azimuth);
+        //Log.i(TAG, "will set rotation from " + currectAzimuth + " to "
+        //        + azimuth);
 
         Animation an = new RotateAnimation(+currectAzimuth, +azimuth,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,

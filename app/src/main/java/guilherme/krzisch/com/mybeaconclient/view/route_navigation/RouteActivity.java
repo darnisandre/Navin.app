@@ -47,10 +47,9 @@ public class RouteActivity extends AppCompatActivity {
     List<Long> idLst = new ArrayList<Long>();
     Timer timer= new Timer();
     public static Context baseContext;
-
     private static final String TAG = "CompassActivity";
-
     private Compass compass;
+    final Handler myHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,6 @@ public class RouteActivity extends AppCompatActivity {
                 // do your logic for long click and remember to return it
                 Button rootView = (Button) findViewById(R.id.buttonContinueNav);
                 rootView.setVisibility(View.INVISIBLE);
-                MyApp.getAppTTS().initQueue("Buscando..");
 
                 if (rotaCalculada.size() > 0) getDirection();
             }
@@ -127,8 +125,6 @@ public class RouteActivity extends AppCompatActivity {
         }
     }
 
-    final Handler myHandler = new Handler();
-
     private void getProximityBeacon() {
 
         Button rootView = (Button) findViewById(R.id.buttonContinueNav);
@@ -137,7 +133,8 @@ public class RouteActivity extends AppCompatActivity {
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
-        textViewAction.setText("Buscando..");
+        MyApp.getAppTTS().initQueue("Estamos identificando sua posição");
+        textViewAction.setText("Identificando posição..");
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");
 
@@ -183,6 +180,7 @@ public class RouteActivity extends AppCompatActivity {
             TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
             textViewAction.setText("Vire lentamente para a direita até o celular vibrar");
+            MyApp.getAppTTS().addQueue("Vire lentamente para a direita até o celular vibrar");
             textViewDesc.setText("" + relation.getDegree());
 
             //TODO HERE só passar dessa parte quando estiver na direção correta
@@ -192,13 +190,27 @@ public class RouteActivity extends AppCompatActivity {
                     int roundedCompass = (int) compass.getAzimuth();
                     int roundeRelation =  relation.getDegree() == 360 ? 0 : (int) relation.getDegree();
 
-                    if(roundedCompass == roundeRelation){
+                    int minRelation, maxRelation;
+                    if(roundeRelation - 10 < 0){
+                        minRelation = 0;
+                        maxRelation = roundeRelation + 15;
+                    }else if(roundeRelation + 10 >= 360){
+                        minRelation = roundeRelation - 15;
+                        maxRelation = 359;
+                    }else{
+                        minRelation = roundeRelation - 10;
+                        maxRelation = roundeRelation + 10;
+                    }
+
+                    if(roundedCompass >= minRelation && roundedCompass <= maxRelation){
                         myHandler.post(directionOK);
                         this.cancel();
                         return;
                     }
                 }
             },0,200);
+
+
         }
 
     }
@@ -206,7 +218,6 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable directionOK = new Runnable() {
         public void run() {
 
-            //TODO HERE vibrar o celular
             Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             v.vibrate(500);
@@ -217,6 +228,7 @@ public class RouteActivity extends AppCompatActivity {
             TextView textViewAction = (TextView) findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) findViewById(R.id.textViewDesc);
             textViewAction.setText("Ande em frente por " + relation.getDistance() + " metros");
+            MyApp.getAppTTS().addQueue("Ande em frente por " + relation.getDistance() + " metros");
             textViewDesc.setText("");
             getNextBeacon();
         }
@@ -297,6 +309,10 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable routeOk = new Runnable() {
         public void run() {
 
+            Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(100);
+
             TextView textViewAction = (TextView) findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) findViewById(R.id.textViewDesc);
             ProgressBar loadingImage = (ProgressBar) findViewById(R.id.progressBarLoading);
@@ -307,23 +323,20 @@ public class RouteActivity extends AppCompatActivity {
             if (rotaCalculada.size() == 0) {
                 textViewAction.setText("Você chegou ao seu destino final\nPonto: " + lastBeacon.getId());
                 textViewDesc.setText(lastBeacon.getDescription());
+
+                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
             }
             else
             {
-                textViewAction.setText("Você chegou ao ponto: " + lastBeacon.getId());
-
-                String withHeuristic = "Rota: \n";
-                for (BeaconNode bn : rotaCalculada) {
-                    withHeuristic += bn.getBeacon().getId() + ", ";
-                }
-
                 //verificar se é um ponto final pelo tipo do beacon
                 if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
                     textViewAction.setText("Você chegou a um de seus destinos\nPonto: " + lastBeacon.getId());
                     textViewDesc.setText(lastBeacon.getDescription() + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
                 }
                 else{
-                    textViewDesc.setText(withHeuristic + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                    textViewAction.setText("Você está no ponto: " + lastBeacon.getId());
+                    textViewDesc.setText(" Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
                 }
 
                 MyApp.getAppTTS().addQueue("" + textViewAction.getText());
@@ -338,6 +351,10 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable recalculateRoute = new Runnable() {
         public void run() {
 
+            Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            v.vibrate(100);
+
             TextView textViewAction = (TextView) findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) findViewById(R.id.textViewDesc);
             ProgressBar loadingImage = (ProgressBar) findViewById(R.id.progressBarLoading);
@@ -345,19 +362,24 @@ public class RouteActivity extends AppCompatActivity {
             loadingImage.setVisibility(ImageView.INVISIBLE);
 
             if (rotaCalculada.size() == 0) {
-                textViewAction.setText("Você já passou por todos pontos de sua rota! Volte à página inicial para ver outras opções.");
-                //textViewDesc.setText(lastBeacon.getDescription());
+                textViewAction.setText("Você chegou ao seu destino final\nPonto: " + lastBeacon.getId());
+                textViewDesc.setText(lastBeacon.getDescription());
+
+                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
             }
             else {
 
-                textViewAction.setText("Você chegou ao ponto " + lastBeacon.getId() + " que não é o próximo destino da sua rota. Estamos recalculando sua rota.");
-
-                String withHeuristic = "Nova Rota: \n";
-                for (BeaconNode bn : rotaCalculada) {
-                    withHeuristic += bn.getBeacon().getId() + ", ";
+                //verificar se é um ponto final pelo tipo do beacon
+                if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
+                    textViewAction.setText("Você chegou a um de seus destinos\nPonto: " + lastBeacon.getId());
+                    textViewDesc.setText(lastBeacon.getDescription() + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                }
+                else{
+                    textViewAction.setText("Você chegou ao ponto " + lastBeacon.getId() + " que não é o próximo destino da sua rota. Estamos recalculando sua rota.");
+                    textViewDesc.setText(" Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
                 }
 
-                textViewDesc.setText(withHeuristic);
                 MyApp.getAppTTS().addQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
