@@ -181,7 +181,7 @@ public class RouteActivity extends AppCompatActivity {
             TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
             textViewAction.setText("Vire lentamente para a direita até o celular vibrar");
             MyApp.getAppTTS().addQueue("Vire lentamente para a direita até o celular vibrar");
-            textViewDesc.setText("" + relation.getDegree());
+            textViewDesc.setText("Vire até " + relation.getDegree() + " graus.");
 
             //TODO HERE só passar dessa parte quando estiver na direção correta
             timer.scheduleAtFixedRate(new TimerTask() {
@@ -227,9 +227,8 @@ public class RouteActivity extends AppCompatActivity {
 
             TextView textViewAction = (TextView) findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) findViewById(R.id.textViewDesc);
-            textViewAction.setText("Ande em frente por " + relation.getDistance() + " metros");
+            textViewDesc.setText("Ande em frente por " + relation.getDistance() + " metros");
             MyApp.getAppTTS().addQueue("Ande em frente por " + relation.getDistance() + " metros");
-            textViewDesc.setText("");
             getNextBeacon();
         }
 
@@ -245,7 +244,6 @@ public class RouteActivity extends AppCompatActivity {
         ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
         textViewAction.setText("Buscando..");
         loadingImage.setVisibility(ImageView.VISIBLE);
-        textViewDesc.setText("");
 
 
         timer.scheduleAtFixedRate(new TimerTask() {
