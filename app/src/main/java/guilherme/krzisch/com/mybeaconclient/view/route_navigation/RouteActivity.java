@@ -56,6 +56,9 @@ public class RouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
 
+        ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
+        pointer.setVisibility(View.INVISIBLE);
+
         baseContext = getBaseContext();
 
         compass = new Compass(this);
@@ -74,6 +77,9 @@ public class RouteActivity extends AppCompatActivity {
                 // do your logic for long click and remember to return it
                 Button rootView = (Button) findViewById(R.id.buttonContinueNav);
                 rootView.setVisibility(View.INVISIBLE);
+
+                ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
+                pointer.setVisibility(View.VISIBLE);
 
                 if (rotaCalculada.size() > 0) getDirection();
             }
@@ -176,11 +182,19 @@ public class RouteActivity extends AppCompatActivity {
             BeaconNode next = rotaCalculada.get(0);
             final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
 
-            //TODO HERE textview informando pra virar para direção x
             TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
+
+            float point1 = compass.getAzimuth();
+            double point2 = relation.getDegree();
+
             textViewAction.setText("Vire lentamente para a direita até o celular vibrar");
             MyApp.getAppTTS().addQueue("Vire lentamente para a direita até o celular vibrar");
+
+
+            compass.setPoint((int) relation.getDegree());
+
+            //TODO HERE textview informando pra virar para direção x
             textViewDesc.setText("Vire até " + relation.getDegree() + " graus.");
 
             //TODO HERE só passar dessa parte quando estiver na direção correta
@@ -202,7 +216,7 @@ public class RouteActivity extends AppCompatActivity {
                         maxRelation = roundeRelation + 10;
                     }
 
-                    if(roundedCompass >= minRelation && roundedCompass <= maxRelation){
+                    if(Math.abs(roundedCompass) >= 345 || Math.abs(roundedCompass) <= 15){
                         myHandler.post(directionOK);
                         this.cancel();
                         return;
@@ -307,6 +321,10 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable routeOk = new Runnable() {
         public void run() {
 
+            compass.setPoint((int) compass.getAzimuth() + 90);
+            ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
+            pointer.setVisibility(View.INVISIBLE);
+
             Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
             v.vibrate(100);
@@ -348,6 +366,10 @@ public class RouteActivity extends AppCompatActivity {
 
     final Runnable recalculateRoute = new Runnable() {
         public void run() {
+
+            compass.setPoint((int) compass.getAzimuth() + 90);
+            ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
+            pointer.setVisibility(View.INVISIBLE);
 
             Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds

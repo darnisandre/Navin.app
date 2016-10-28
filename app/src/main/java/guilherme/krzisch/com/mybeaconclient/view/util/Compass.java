@@ -27,6 +27,7 @@ public class Compass implements SensorEventListener {
     private float[] mGeomagnetic = new float[3];
     private float azimuth = 0f;
     private float currectAzimuth = 0;
+    private int point = 360;
 
     // compass arrow to rotate
     public ImageView arrowView = null;
@@ -36,6 +37,10 @@ public class Compass implements SensorEventListener {
         //List<Sensor> deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
         gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         msensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+    }
+
+    public void setPoint(int point){
+        this.point = point;
     }
 
     public float getAzimuth(){
@@ -66,7 +71,7 @@ public class Compass implements SensorEventListener {
         //Log.i(TAG, "will set rotation from " + currectAzimuth + " to "
         //        + azimuth);
 
-        Animation an = new RotateAnimation(+currectAzimuth, +azimuth,
+        Animation an = new RotateAnimation(-currectAzimuth, -azimuth,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                 0.5f);
         currectAzimuth = azimuth;
@@ -119,9 +124,10 @@ public class Compass implements SensorEventListener {
                 SensorManager.getOrientation(R, orientation);
                 // Log.d(TAG, "azimuth (rad): " + azimuth);
                 azimuth = (float) Math.toDegrees(orientation[0]); // orientation
-                azimuth = (azimuth + 360) % 360;
-                // Log.d(TAG, "azimuth (deg): " + azimuth);
-                adjustArrow();
+                azimuth = (azimuth + 360 - point) % 360;
+                //Log.d(TAG, "azimuth (deg): " + azimuth);
+                if(arrowView.getVisibility() == View.VISIBLE)
+                    adjustArrow();
             }
         }
     }

@@ -15,24 +15,15 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageViewBussola"
-            android:layout_width="236dp"
-            android:layout_height="236dp"
-            android:contentDescription="@string/compass_dial"
-            android:src="@drawable/dial"
-            android:layout_above="@+id/buttonContinueNav"
-            android:layout_centerHorizontal="true" />
-
-        <ImageView
             android:id="@+id/imageViewPonteiro"
             android:layout_width="14dp"
             android:layout_height="172dp"
             android:contentDescription="@string/compass_hands"
             android:scaleType="fitXY"
             android:src="@drawable/hands"
-            android:layout_alignTop="@+id/imageViewBussola"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="31dp" />
+            android:layout_above="@+id/buttonContinueNav"
+            android:layout_alignStart="@+id/buttonContinueNav"
+            android:layout_alignEnd="@+id/buttonContinueNav" />
 
         <Button
             android:layout_width="wrap_content"
@@ -50,8 +41,7 @@
             android:id="@+id/progressBarLoading"
             android:indeterminate="true"
             android:visibility="invisible"
-            android:layout_marginBottom="32dp"
-            android:layout_above="@+id/imageViewBussola"
+            android:layout_above="@+id/imageViewPonteiro"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
