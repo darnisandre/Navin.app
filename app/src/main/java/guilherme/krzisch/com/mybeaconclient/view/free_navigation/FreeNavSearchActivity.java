@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -47,6 +49,8 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_free_nav_search);
         ButterKnife.inject(this);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         baseContext = getBaseContext();
 
         //mostra o icone na barra
@@ -60,10 +64,13 @@ public class FreeNavSearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // do your logic for long click and remember to return it
+                MyApp.getAppTTS().initQueue("Buscando..");
                 StartFreeNavigation();
             }});
 
         //inicia thread
+        MyApp.getAppTTS().initQueue("Por favor, ande pelo local.");
+        MyApp.getAppTTS().addQueue("Assim que for identificado um beacon você será notificado.");
         StartFreeNavigation();
 
     }
@@ -78,9 +85,6 @@ public class FreeNavSearchActivity extends AppCompatActivity {
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
         ProgressBar loadingImage = (ProgressBar) this.findViewById(R.id.progressBarLoading);
-        MyApp.getAppTTS().initQueue("Por favor, ande pelo local.");
-        MyApp.getAppTTS().addQueue("Assim que for identificado um beacon você será notificado.");
-        MyApp.getAppTTS().addQueue("Buscando..");
         textViewAction.setText("Buscando..");
         loadingImage.setVisibility(ImageView.VISIBLE);
         textViewDesc.setText("");

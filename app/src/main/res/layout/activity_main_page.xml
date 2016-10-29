@@ -19,7 +19,8 @@
         android:src="@drawable/estimote3_image"
         android:layout_marginTop="116dp"
         android:layout_alignTop="@+id/textViewAppDesc"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:importantForAccessibility="no"/>
 
     <Button
         android:layout_width="wrap_content"

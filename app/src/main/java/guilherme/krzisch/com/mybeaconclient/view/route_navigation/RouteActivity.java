@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,6 +60,8 @@ public class RouteActivity extends AppCompatActivity {
         ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
         pointer.setVisibility(View.INVISIBLE);
 
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         baseContext = getBaseContext();
 
         compass = new Compass(this);
@@ -70,13 +73,13 @@ public class RouteActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         Button rootView = (Button) findViewById(R.id.buttonContinueNav);
-        rootView.setVisibility(View.INVISIBLE);
+        rootView.setEnabled(false);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // do your logic for long click and remember to return it
                 Button rootView = (Button) findViewById(R.id.buttonContinueNav);
-                rootView.setVisibility(View.INVISIBLE);
+                rootView.setEnabled(false);
 
                 ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
                 pointer.setVisibility(View.VISIBLE);
@@ -134,7 +137,7 @@ public class RouteActivity extends AppCompatActivity {
     private void getProximityBeacon() {
 
         Button rootView = (Button) findViewById(R.id.buttonContinueNav);
-        rootView.setVisibility(View.INVISIBLE);
+        rootView.setEnabled(false);
 
         TextView textViewAction = (TextView) this.findViewById(R.id.textViewAction);
         TextView textViewDesc = (TextView) this.findViewById(R.id.textViewDesc);
@@ -204,7 +207,7 @@ public class RouteActivity extends AppCompatActivity {
                     int roundedCompass = (int) compass.getAzimuth();
                     int roundeRelation =  relation.getDegree() == 360 ? 0 : (int) relation.getDegree();
 
-                    int minRelation, maxRelation;
+                   /* int minRelation, maxRelation;
                     if(roundeRelation - 10 < 0){
                         minRelation = 0;
                         maxRelation = roundeRelation + 15;
@@ -214,7 +217,7 @@ public class RouteActivity extends AppCompatActivity {
                     }else{
                         minRelation = roundeRelation - 10;
                         maxRelation = roundeRelation + 10;
-                    }
+                    }*/
 
                     if(Math.abs(roundedCompass) >= 345 || Math.abs(roundedCompass) <= 15){
                         myHandler.post(directionOK);
@@ -242,7 +245,7 @@ public class RouteActivity extends AppCompatActivity {
             TextView textViewAction = (TextView) findViewById(R.id.textViewAction);
             TextView textViewDesc = (TextView) findViewById(R.id.textViewDesc);
             textViewDesc.setText("Ande em frente por " + relation.getDistance() + " metros");
-            MyApp.getAppTTS().addQueue("Ande em frente por " + relation.getDistance() + " metros");
+            MyApp.getAppTTS().initQueue("Ande em frente por " + relation.getDistance() + " metros");
             getNextBeacon();
         }
 
@@ -337,29 +340,29 @@ public class RouteActivity extends AppCompatActivity {
 
             //verificar se acabou a rota
             if (rotaCalculada.size() == 0) {
-                textViewAction.setText("Você chegou ao seu destino final\nPonto: " + lastBeacon.getId());
+                textViewAction.setText("Você chegou ao seu destino final");
                 textViewDesc.setText(lastBeacon.getDescription());
 
-                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().initQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
             }
             else
             {
                 //verificar se é um ponto final pelo tipo do beacon
                 if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
-                    textViewAction.setText("Você chegou a um de seus destinos\nPonto: " + lastBeacon.getId());
-                    textViewDesc.setText(lastBeacon.getDescription() + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                    textViewAction.setText("Você chegou a um de seus destinos");
+                    textViewDesc.setText(lastBeacon.getDescription() + "\nAinda restam destinos na sua rota, quando desejar clique em continuar navegação.");
                 }
                 else{
-                    textViewAction.setText("Você está no ponto: " + lastBeacon.getId());
-                    textViewDesc.setText(" Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                    textViewAction.setText("Você está próximo a um Beacon");
+                    textViewDesc.setText("Clique em continuar navegação para prosseguir.");
                 }
 
-                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().initQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
                 Button rootView = (Button) findViewById(R.id.buttonContinueNav);
-                rootView.setVisibility(View.VISIBLE);
+                rootView.setEnabled(true);
             }
         }
     };
@@ -382,29 +385,29 @@ public class RouteActivity extends AppCompatActivity {
             loadingImage.setVisibility(ImageView.INVISIBLE);
 
             if (rotaCalculada.size() == 0) {
-                textViewAction.setText("Você chegou ao seu destino final\nPonto: " + lastBeacon.getId());
+                textViewAction.setText("Você chegou ao seu destino final");
                 textViewDesc.setText(lastBeacon.getDescription());
 
-                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().initQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
             }
             else {
 
                 //verificar se é um ponto final pelo tipo do beacon
                 if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
-                    textViewAction.setText("Você chegou a um de seus destinos\nPonto: " + lastBeacon.getId());
-                    textViewDesc.setText(lastBeacon.getDescription() + " Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                    textViewAction.setText("Você chegou a um de seus destinos");
+                    textViewDesc.setText(lastBeacon.getDescription()  + "\nAinda restam destinos na sua rota, quando desejar clique em continuar navegação.");
                 }
                 else{
-                    textViewAction.setText("Você chegou ao ponto " + lastBeacon.getId() + " que não é o próximo destino da sua rota. Estamos recalculando sua rota.");
-                    textViewDesc.setText(" Próximo ponto: " + rotaCalculada.get(0).getBeacon().getId());
+                    textViewAction.setText("Você chegou a um ponto que não é o próximo destino da sua rota. Sua rota foi recalculada.");
+                    textViewDesc.setText("Clique em continuar navegação para prosseguir.");
                 }
 
-                MyApp.getAppTTS().addQueue("" + textViewAction.getText());
+                MyApp.getAppTTS().initQueue("" + textViewAction.getText());
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
 
                 Button rootView = (Button) findViewById(R.id.buttonContinueNav);
-                rootView.setVisibility(View.VISIBLE);
+                rootView.setEnabled(true);
             }
         }
     };
