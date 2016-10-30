@@ -198,7 +198,7 @@ public class RouteActivity extends AppCompatActivity {
             compass.setPoint((int) relation.getDegree());
 
             //TODO HERE textview informando pra virar para direção x
-            textViewDesc.setText("Vire até " + relation.getDegree() + " graus.");
+            textViewDesc.setText("");
 
             //TODO HERE só passar dessa parte quando estiver na direção correta
             timer.scheduleAtFixedRate(new TimerTask() {
