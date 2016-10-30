@@ -109,6 +109,8 @@ public class InternalCache {
                 cacheLocations.put(l.getId(), l);
             }
             storeCacheLocations(cacheLocations);
+        }else{
+            locations = new ArrayList<>(getCacheLocations().values());
         }
         return locations;
     }

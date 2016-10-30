@@ -81,18 +81,20 @@ public class BeaconTree {
         }
 
         double[][] distances = new double[nodes.size()][nodes.size()];
-        String[][] path = new String[nodes.size()][nodes.size()];
+        Integer[][] next = new Integer[nodes.size()][nodes.size()];
         for(int i=0; i < nodes.size(); i++){
             for (int j=0;j<nodes.size();j++){
                 distances[i][j] = Double.MAX_VALUE;
-                path[i][j] = "";
                 if(i==j) distances[i][j] =0;
             }
         }
 
         for (ConnectionDTO dto : mapping.getConnections()) {
-            distances[idToPos.get(dto.getBeaconA().getId())][idToPos.get(dto.getBeaconB().getId())] = dto.getDistance();
-            distances[idToPos.get(dto.getBeaconB().getId())][idToPos.get(dto.getBeaconA().getId())] = dto.getDistance();
+            int posA = idToPos.get(dto.getBeaconA().getId()), posB = idToPos.get(dto.getBeaconB().getId());
+            distances[posA][posB] = dto.getDistance();
+            distances[posB][posA] = dto.getDistance();
+            next[posA][posB] = posB;
+            next[posB][posA] = posA;
         }
 
 
@@ -101,7 +103,7 @@ public class BeaconTree {
                 for(int j=0;j<nodes.size();j++){
                     if( distances[i][j] > distances[i][k] + distances[k][j]){
                         distances[i][j] = distances[i][k] + distances[k][j];
-                        path[i][j] = path[i][k] + posToId.get(k) + "," + path[k][j];
+                        next[i][j] = next[i][k];
                     }
                 }
             }
@@ -142,18 +144,34 @@ public class BeaconTree {
             }
         }
 
-        String fullPath=tspPath.get(0).toString() + ",";
-        for(int i=1; i < tspPath.size();i++){
-            fullPath += path[idToPos.get(tspPath.get(i-1))][idToPos.get(tspPath.get(i))] + tspPath.get(i) + ",";
-        }
-
-        Log.i("TspHeuristicIMB:Path", fullPath);
-        Log.i("TspHeuristicIMB:Tempo",String.valueOf(System.nanoTime()-time));
 
         List<BeaconNode> beaconsPath = new ArrayList<BeaconNode>();
-        for(String s: fullPath.split(",")){
-            beaconsPath.add(getNode(new Long(s)));
+
+        beaconsPath.add(getNode(tspPath.get(0)));
+        for(int i=1; i < tspPath.size();i++){
+            int u = idToPos.get(tspPath.get(i-1));
+            int v = idToPos.get(tspPath.get(i));
+            while(u!=v){
+                u = next[u][v];
+                beaconsPath.add(getNode(posToId.get(u)));
+            }
         }
+
+        String a = "";
+        for(BeaconNode n: beaconsPath){
+            a+= n.getBeacon().getId() + ",";
+        }
+
+        Log.i("TspHeuristicIMB2:Path", a);
+        Log.i("TspHeuristicIMB2:Tempo",String.valueOf(System.nanoTime()-time));
+
         return beaconsPath;
     }
+
+
+
+
+
+
+
 }
