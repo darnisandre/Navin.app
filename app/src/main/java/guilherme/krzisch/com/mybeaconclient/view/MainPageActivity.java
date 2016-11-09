@@ -60,7 +60,7 @@ public class MainPageActivity extends AppCompatActivity {
 
         TextView appDesc = (TextView) findViewById(R.id.textViewAppDesc);
         appDesc.setText("Você está no " + MyApp.getLocation().getDescription() + ". Aqui é possível " +
-                "iniciar uma navegação sem rota ou com rota. Na navegação sem rota você receberá informações assim que" +
+                "iniciar uma navegação sem rota ou com rota. Na navegação sem rota você receberá informações assim que " +
                 "se aproximar de um Beacon. Na navegação com rota você poderá selecionar uma rota e será guiado por este local.");
 
     }
