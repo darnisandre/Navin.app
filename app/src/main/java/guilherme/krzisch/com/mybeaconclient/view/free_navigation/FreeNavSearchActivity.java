@@ -114,7 +114,7 @@ public class FreeNavSearchActivity extends AppCompatActivity {
 
 
             }
-        },0,1000);
+        },0,100);
     }
 
     final Runnable myRunnable = new Runnable() {

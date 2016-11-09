@@ -176,7 +176,7 @@ public class RouteActivity extends AppCompatActivity {
 
 
             }
-        },0,1000);
+        },0,100);
     }
 
     private void getDirection(){
@@ -318,7 +318,7 @@ public class RouteActivity extends AppCompatActivity {
 
 
             }
-        },0,1000);
+        },0,100);
     }
 
     final Runnable routeOk = new Runnable() {
