@@ -57,8 +57,8 @@ public class RouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
 
-        ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
-        pointer.setVisibility(View.INVISIBLE);
+/*        ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
+        pointer.setVisibility(View.INVISIBLE);*/
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -69,7 +69,7 @@ public class RouteActivity extends AppCompatActivity {
 
         //mostra o icone na barra
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setIcon(R.mipmap.ic_launcher);
+        //actionBar.setIcon(R.mipmap.ic_launcher);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         Button rootView = (Button) findViewById(R.id.buttonContinueNav);
@@ -196,28 +196,17 @@ public class RouteActivity extends AppCompatActivity {
 
 
             compass.setPoint((int) relation.getDegree());
+            Log.i("Direction", "" + relation.getDegree());
 
             //TODO HERE textview informando pra virar para direção x
             textViewDesc.setText("");
 
-            //TODO HERE só passar dessa parte quando estiver na direção correta
             timer.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     int roundedCompass = (int) compass.getAzimuth();
-                    int roundeRelation =  relation.getDegree() == 360 ? 0 : (int) relation.getDegree();
+                    //int roundeRelation =  relation.getDegree() == 360 ? 0 : (int) relation.getDegree();
 
-                   /* int minRelation, maxRelation;
-                    if(roundeRelation - 10 < 0){
-                        minRelation = 0;
-                        maxRelation = roundeRelation + 15;
-                    }else if(roundeRelation + 10 >= 360){
-                        minRelation = roundeRelation - 15;
-                        maxRelation = 359;
-                    }else{
-                        minRelation = roundeRelation - 10;
-                        maxRelation = roundeRelation + 10;
-                    }*/
 
                     if(Math.abs(roundedCompass) >= 345 || Math.abs(roundedCompass) <= 15){
                         myHandler.post(directionOK);
@@ -225,7 +214,7 @@ public class RouteActivity extends AppCompatActivity {
                         return;
                     }
                 }
-            },0,200);
+            },0,1000);
 
 
         }
@@ -324,9 +313,12 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable routeOk = new Runnable() {
         public void run() {
 
-            compass.setPoint((int) compass.getAzimuth() + 90);
+            BeaconNode next = rotaCalculada.get(0);
+            final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
+            compass.setPoint((int) relation.getDegree());
+            /*compass.setPoint((int) compass.getAzimuth() + 90);
             ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
-            pointer.setVisibility(View.INVISIBLE);
+            pointer.setVisibility(View.INVISIBLE);*/
 
             Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds
@@ -370,9 +362,12 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable recalculateRoute = new Runnable() {
         public void run() {
 
-            compass.setPoint((int) compass.getAzimuth() + 90);
+            BeaconNode next = rotaCalculada.get(0);
+            final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
+            compass.setPoint((int) relation.getDegree());
+            /*compass.setPoint((int) compass.getAzimuth() + 90);
             ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
-            pointer.setVisibility(View.INVISIBLE);
+            pointer.setVisibility(View.INVISIBLE);*/
 
             Vibrator v = (Vibrator) baseContext.getSystemService(Context.VIBRATOR_SERVICE);
             // Vibrate for 500 milliseconds

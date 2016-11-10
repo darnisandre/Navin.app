@@ -126,8 +126,7 @@ public class Compass implements SensorEventListener {
                 azimuth = (float) Math.toDegrees(orientation[0]); // orientation
                 azimuth = (azimuth + 360 - point) % 360;
                 //Log.d(TAG, "azimuth (deg): " + azimuth);
-                if(arrowView.getVisibility() == View.VISIBLE)
-                    adjustArrow();
+                adjustArrow();
             }
         }
     }

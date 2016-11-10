@@ -180,8 +180,6 @@ public class AddRouteActivity extends AppCompatActivity {
             MyApp.getInternalCache().setRoutesPersonalized(Integer.parseInt(MyApp.getLocation().getId().toString()), newValues);
             Toast.makeText(getBaseContext(), "Rota adicionada com sucesso!", Toast.LENGTH_LONG).show();
 
-            Intent intent = new Intent(getBaseContext(), MainPageActivity.class);
-            startActivity(intent);
             finish();
         }else{
             Toast.makeText(getBaseContext(), "É necessário selecionar pelo menos uma categoria!", Toast.LENGTH_LONG).show();
