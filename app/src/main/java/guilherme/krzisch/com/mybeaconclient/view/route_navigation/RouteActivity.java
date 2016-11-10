@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -87,6 +88,8 @@ public class RouteActivity extends AppCompatActivity {
                 if (rotaCalculada.size() > 0) getDirection();
             }
         });
+
+        rootView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED);
 
         Bundle b = getIntent().getExtras();
         int value = -1; // or other values
