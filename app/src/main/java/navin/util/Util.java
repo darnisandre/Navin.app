@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Util {
     public static double getReverseDegree(double degree){
-        return 360 - degree;
+        return degree+180%360;
     }
     public static <T> List<T> asList(T[] array) {
         if(array==null) return null;
