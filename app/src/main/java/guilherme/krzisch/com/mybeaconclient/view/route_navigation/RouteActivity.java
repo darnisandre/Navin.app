@@ -316,9 +316,6 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable routeOk = new Runnable() {
         public void run() {
 
-            BeaconNode next = rotaCalculada.get(0);
-            final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
-            compass.setPoint((int) relation.getDegree());
             /*compass.setPoint((int) compass.getAzimuth() + 90);
             ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
             pointer.setVisibility(View.INVISIBLE);*/
@@ -343,6 +340,11 @@ public class RouteActivity extends AppCompatActivity {
             }
             else
             {
+
+                BeaconNode next = rotaCalculada.get(0);
+                final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
+                compass.setPoint((int) relation.getDegree());
+
                 //verificar se é um ponto final pelo tipo do beacon
                 if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
                     textViewAction.setText("Você chegou a um de seus destinos");
@@ -365,9 +367,6 @@ public class RouteActivity extends AppCompatActivity {
     final Runnable recalculateRoute = new Runnable() {
         public void run() {
 
-            BeaconNode next = rotaCalculada.get(0);
-            final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
-            compass.setPoint((int) relation.getDegree());
             /*compass.setPoint((int) compass.getAzimuth() + 90);
             ImageView pointer = (ImageView) findViewById(R.id.imageViewPonteiro);
             pointer.setVisibility(View.INVISIBLE);*/
@@ -390,6 +389,10 @@ public class RouteActivity extends AppCompatActivity {
                 MyApp.getAppTTS().addQueue("" + textViewDesc.getText());
             }
             else {
+
+                BeaconNode next = rotaCalculada.get(0);
+                final BeaconRelation relation = tree.getRelation(lastBeacon.getId(), next.getBeacon().getId());
+                compass.setPoint((int) relation.getDegree());
 
                 //verificar se é um ponto final pelo tipo do beacon
                 if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
