@@ -114,11 +114,26 @@ public class BeaconTree {
         List<Long> tspPath = new ArrayList<Long>(ids.size());
         pass.remove(atual);
         tspPath.add(atual); //Inicial
-        if(pass.size()>0) {
-            tspPath.add(pass.get(0)); //Segundo
-            pass.remove(0);
-        }
-        for(Long id: pass){
+
+        while(!pass.isEmpty()){
+            Long id = null;
+            double maxDist = Double.MIN_VALUE;
+            //Descobre qual o próximo beacon a ser adicionado na rota
+            for(Long toPass: pass){
+                double dist = Double.MIN_VALUE;
+                for(Long i : tspPath){
+                    double thisDist = distances[idToPos.get(toPass)][idToPos.get(i)];
+                    if(thisDist > dist){
+                        dist = thisDist;
+                    }
+                }
+                if(dist > maxDist){
+                    maxDist = dist;
+                    id = toPass;
+                }
+            }
+
+            //Descobre a posição em que custa menos
             Double acrecimoMinimo = Double.MAX_VALUE;
             Integer acrecimoMinimoPos = null;
             for(int i=1; i< tspPath.size();i++){
@@ -137,10 +152,10 @@ public class BeaconTree {
                 acrecimoMinimo = distances[idToPos.get(tspPath.get(tspPath.size()-1))][idToPos.get(id)];
                 acrecimoMinimoPos = tspPath.size();
             }
-
-
+            //Adiciona na rota na posição que custa menos
             if(acrecimoMinimoPos!=null){
                 tspPath.add(acrecimoMinimoPos,id);
+                pass.remove(id);
             }
         }
 
@@ -157,14 +172,13 @@ public class BeaconTree {
             }
         }
 
-        String a = "";
+        /*String a = "";
         for(BeaconNode n: beaconsPath){
             a+= n.getBeacon().getId() + ",";
         }
 
-        Log.i("TspHeuristicIMB2:Path", a);
-        Log.i("TspHeuristicIMB2:Tempo",String.valueOf(System.nanoTime()-time));
-
+        Log.i("TspHeuristic:Path", "Rota cientifica & " +  startId + " & " + a.replaceAll(",$","") + " & " + String.valueOf((System.nanoTime()-time)/1000000.0)+ "ms \\tabularnewline");
+*/
         return beaconsPath;
     }
 
