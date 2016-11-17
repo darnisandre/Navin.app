@@ -120,13 +120,15 @@ public class BeaconTree {
             double maxDist = Double.MIN_VALUE;
             //Descobre qual o próximo beacon a ser adicionado na rota
             for(Long toPass: pass){
-                double dist = Double.MIN_VALUE;
+                //
+                double dist = Double.MAX_VALUE;
                 for(Long i : tspPath){
                     double thisDist = distances[idToPos.get(toPass)][idToPos.get(i)];
-                    if(thisDist > dist){
+                    if(thisDist < dist){
                         dist = thisDist;
                     }
                 }
+
                 if(dist > maxDist){
                     maxDist = dist;
                     id = toPass;
@@ -172,13 +174,13 @@ public class BeaconTree {
             }
         }
 
-        /*String a = "";
+        String a = "";
         for(BeaconNode n: beaconsPath){
             a+= n.getBeacon().getId() + ",";
         }
 
         Log.i("TspHeuristic:Path", "Rota cientifica & " +  startId + " & " + a.replaceAll(",$","") + " & " + String.valueOf((System.nanoTime()-time)/1000000.0)+ "ms \\tabularnewline");
-*/
+
         return beaconsPath;
     }
 
