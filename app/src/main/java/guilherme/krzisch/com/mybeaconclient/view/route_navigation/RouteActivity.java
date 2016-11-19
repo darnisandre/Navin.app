@@ -44,6 +44,7 @@ public class RouteActivity extends AppCompatActivity {
     BeaconDTO lastBeacon = null;
     ArrayList<BeaconObject> ar = new ArrayList<BeaconObject>();
     List<BeaconNode> rotaCalculada = new ArrayList<BeaconNode>();
+    List<BeaconDTO> FinalDests = new ArrayList<BeaconDTO>();
     BeaconTree tree = null;
     List<BeaconDTO> bLst = new ArrayList<BeaconDTO>();
     List<Long> idLst = new ArrayList<Long>();
@@ -118,6 +119,7 @@ public class RouteActivity extends AppCompatActivity {
             }
 
             if(route != null) {
+                FinalDests = route.getBeacons();
                 bLst = route.getBeacons();
                 idLst = new ArrayList<Long>();
 
@@ -346,9 +348,25 @@ public class RouteActivity extends AppCompatActivity {
                 compass.setPoint((int) relation.getDegree());
 
                 //verificar se é um ponto final pelo tipo do beacon
-                if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
-                    textViewAction.setText("Você chegou a um de seus destinos");
-                    textViewDesc.setText(lastBeacon.getDescription() + "\nAinda restam destinos na sua rota, quando desejar clique em continuar navegação.");
+                if(lastBeacon.getType().getDescription().equals("OBJECT_BEACON_TYPE")){
+
+                    boolean isFinal = false;
+                    for(BeaconDTO b : FinalDests){
+                        if((long)(lastBeacon.getId()) == (long)(b.getId())){
+                            isFinal = true;
+                            FinalDests.remove(b);
+                            break;
+                        }
+                    }
+
+                    if(isFinal) {
+                        textViewAction.setText("Você chegou a um de seus destinos");
+                        textViewDesc.setText(lastBeacon.getDescription() + "\nAinda restam destinos na sua rota, quando desejar clique em continuar navegação.");
+                    }
+                    else{
+                        textViewAction.setText("Você está próximo a um Beacon");
+                        textViewDesc.setText("Clique em continuar navegação para prosseguir.");
+                    }
                 }
                 else{
                     textViewAction.setText("Você está próximo a um Beacon");
@@ -395,12 +413,29 @@ public class RouteActivity extends AppCompatActivity {
                 compass.setPoint((int) relation.getDegree());
 
                 //verificar se é um ponto final pelo tipo do beacon
-                if(lastBeacon.getType().equals("OBJECT_BEACON_TYPE")){
-                    textViewAction.setText("Você chegou a um de seus destinos");
-                    textViewDesc.setText(lastBeacon.getDescription()  + "\nAinda restam destinos na sua rota, quando desejar clique em continuar navegação.");
+                if(lastBeacon.getType().getDescription().equals("OBJECT_BEACON_TYPE")){
+
+                    boolean isFinal = false;
+                    for(BeaconDTO b : FinalDests){
+                        if((long)(lastBeacon.getId()) == (long)(b.getId())){
+                            isFinal = true;
+                            FinalDests.remove(b);
+                            break;
+                        }
+                    }
+
+                    if(isFinal) {
+                        textViewAction.setText("Você chegou a um de seus destinos");
+                        textViewDesc.setText(lastBeacon.getDescription()  + "\nAinda restam destinos na sua rota, quando desejar clique em continuar navegação.");
+                    }
+                    else{
+                        textViewAction.setText("Você chegou a um ponto que não é o próximo destino da sua rota. Sua rota foi re-calculada.");
+                        textViewDesc.setText("Clique em continuar navegação para prosseguir.");
+                    }
+
                 }
                 else{
-                    textViewAction.setText("Você chegou a um ponto que não é o próximo destino da sua rota. Sua rota foi recalculada.");
+                    textViewAction.setText("Você chegou a um ponto que não é o próximo destino da sua rota. Sua rota foi re-calculada.");
                     textViewDesc.setText("Clique em continuar navegação para prosseguir.");
                 }
 

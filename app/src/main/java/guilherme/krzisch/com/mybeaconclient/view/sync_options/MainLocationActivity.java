@@ -80,7 +80,9 @@ public class MainLocationActivity extends AppCompatActivity {
             startActivityForResult(intentBtEnabled, REQUEST_ENABLE_BT);
         }
         else{
-            loadLocations();
+            TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
+            location.setText("Por favor selecione um dos locais abaixo:");
+            locationSelect();
         }
     }
 
@@ -99,6 +101,9 @@ public class MainLocationActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.action_refresh:
                 refresh();
+                return true;
+            case R.id.action_gps:
+                loadLocations();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -128,7 +133,9 @@ public class MainLocationActivity extends AppCompatActivity {
                 ProgressBar local = (ProgressBar) findViewById(R.id.progressBarLocalSearch);
                 local.setVisibility(View.INVISIBLE);
                 //chama método para buscar os locais
-                loadLocations();
+                TextView location = (TextView) findViewById(R.id.textViewLocationStatus);
+                location.setText("Por favor selecione um dos locais abaixo:");
+                locationSelect();
             } else {
                 TextView error = (TextView) findViewById(R.id.textViewError);
                 error.setVisibility(View.VISIBLE);
